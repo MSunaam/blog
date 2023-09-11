@@ -1,0 +1,54 @@
+<div
+  class="bg-[rgba(0,0,0,0.4)] fixed top-0 left-0 bottom-0 right-0 z-[100] flex items-center justify-center overflow-auto"
+  (click)="closeImageUploadModal($event)"
+>
+  <div
+    class="w-1/2 p-10 flex flex-col items-center justify-center bg-white shadow-xl rounded-[5px] relative"
+    #imageModalBody
+  >
+    <div
+      class="absolute top-5 right-5 cursor-pointer"
+      (click)="closeModal.emit(true)"
+    >
+      <i class="bx bx-x bx-sm"></i>
+    </div>
+    <h1 class="title1 mt-2">Upload Profile Image</h1>
+    <div class="">
+      <img
+        [src]="profileImagePath"
+        *ngIf="profileImagePath; else noImgSelected"
+        alt=""
+        class="w-32 h-32 rounded-full border m-10 object-cover"
+        id="newProfileImageInput"
+      />
+
+      <ng-template #noImgSelected>
+        <div
+          class="flex items-center justify-center rounded-full w-32 h-32 m-10 border text-sm"
+        >
+          No Image Selected
+        </div>
+      </ng-template>
+    </div>
+    <input
+      type="file"
+      class="border border-black hidden"
+      #imageSelectInput
+      (change)="onFileChangeEvent($event)"
+    />
+    <div class="flex flex-row w-full items-center justify-center gap-4">
+      <button class="btn btn-primary" (click)="imageSelectInput.click()">
+        Select Image
+      </button>
+      <button
+        class="btn btn-success"
+        [ngClass]="
+          profileImagePath === undefined ? 'btn-disabled' : 'btn-success'
+        "
+        (click)="updateProfileImage()"
+      >
+        Save Image
+      </button>
+    </div>
+  </div>
+</div>

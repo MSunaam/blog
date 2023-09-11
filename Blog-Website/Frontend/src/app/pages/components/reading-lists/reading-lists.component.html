@@ -1,0 +1,40 @@
+<div class="w-full flex items-center justify-center flex-col">
+  <div class="flex flex-row w-full justify-between items-center">
+    <span class="title1">Reading Lists</span>
+    <a
+      class="hover:text-hover text-passive transition-all duration-300 ease-in-out"
+      >View all</a
+    >
+  </div>
+  <div class="flex flex-row w-full h-full items-center">
+    <div
+      class="h-52 w-20 shrink-0 flex items-center justify-center cursor-pointer bg-white hover:bg-gray-300 rounded-l-xl"
+      (click)="scrollLeft()"
+    >
+      <img src="./assets/arrow-up.svg" alt="arrow" class="-rotate-90" />
+    </div>
+    <div
+      id="readingList"
+      class="flex justify-start flex-row gap-2 mt-4 h-full overflow-hidden w-full px-4"
+    >
+      <ng-container *ngFor="let reading of readingList">
+        <div
+          class="flex shrink-0 ml-2 gap-3 justify-start flex-col text-center w-[216px] transition-all duration-300 ease-in-out cursor-pointer"
+        >
+          <img
+            src="{{ reading.image }}"
+            alt="{{ reading.title }}"
+            class="rounded-lg shadow-lg h-52"
+          />
+          <p class="text-[20px] text-[#111210]">{{ reading.title }}</p>
+        </div>
+      </ng-container>
+    </div>
+    <div
+      class="h-52 w-20 mr-2 shrink-0 flex items-center justify-center cursor-pointer bg-white hover:bg-gray-300 rounded-r-xl"
+      (click)="scrollRight()"
+    >
+      <img src="./assets/arrow-up.svg" alt="arrow" class="rotate-90" />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,76 @@
+<div class="container mx-auto">
+  <nav class="h-20 flex flex-row justify-between items-center">
+    <a routerLink="/home"><img src="./assets/logo.svg" alt="Logo" /></a>
+    <div class="flex flex-row gap-14 items-center">
+      <ul class="flex flex-row gap-14 items-center">
+        <li
+          *ngFor="let link of navbarLinks"
+          class="hover:text-hover transition-all duration-300 ease-in-out cursor-pointer"
+        >
+          <a>{{ link.name }}</a>
+        </li>
+      </ul>
+      <div class="relative">
+        <ng-container *ngIf="isLoggedIn && !isLoading; else loggedOut">
+          <div
+            *ngIf="!user.profilePicture; else profilePic"
+            class="flex items-center justify-center bg-purple w-9 h-9 text-white rounded-[10px] cursor-pointer text-xl"
+            (click)="showUserMenu = !showUserMenu"
+            #userMenuButton
+          >
+            <span class="text-white pt-1">{{ user.name[0] }}</span>
+          </div>
+        </ng-container>
+        <div
+          class="absolute rounded shadow -left-2 mt-2 bg-white"
+          [ngClass]="showUserMenu ? '' : 'hidden'"
+          #userMenu
+        >
+          <ul class="text-base flex flex-col">
+            <li
+              routerLink="/home/profile"
+              class="hover:bg-gray-300 px-4 h-9 flex items-center justify-start cursor-pointer"
+            >
+              <a class="flex items-center justify-start gap-2"
+                ><i class="bx bxs-cog bx-sm"></i>Profile</a
+              >
+            </li>
+            <li
+              class="hover:bg-gray-300 px-4 h-9 flex items-center justify-start cursor-pointer"
+            >
+              <a
+                routerLink="/write-blog"
+                class="flex items-center justify-start gap-2"
+                ><i class="bx bxs-edit bx-sm"></i>Write</a
+              >
+            </li>
+            <li
+              class="hover:bg-gray-300 px-4 h-9 flex items-center justify-start cursor-pointer"
+              (click)="logout()"
+            >
+              <a class="flex items-center justify-start gap-2"
+                ><i class="bx bxs-exit bx-sm"></i>Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<ng-template #loggedOut>
+  <a class="btn btn-success cursor-pointer" routerLink="/auth/signup"
+    >Sign up</a
+  >
+</ng-template>
+
+<ng-template #profilePic>
+  <div
+    class="flex items-center justify-center w-9 h-9 object-cover rounded-[10px] cursor-pointer overflow-clip text-xl"
+    (click)="showUserMenu = !showUserMenu"
+    #userMenuButton
+  >
+    <img [src]="sanitizeUrls(user.profilePicture)" alt="Logo" />
+  </div>
+</ng-template>

@@ -1,0 +1,14 @@
+<div
+  class="flex flex-col h-16 gap-2 justify-center cursor-pointer"
+  (mouseover)="hover = true"
+  (mouseleave)="hover = false"
+  (click)="blogClicked.emit(blogDetails)"
+>
+  <p class="">{{ blogDetails.publishDate | date }}</p>
+  <p
+    class="text-[#111210] transition-all duration-100 ease-in-out"
+    [ngClass]="hover ? 'text-hover' : ''"
+  >
+    {{ blogDetails.title }}
+  </p>
+</div>

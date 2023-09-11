@@ -1,0 +1,83 @@
+<div
+  class="container mx-auto w-screen h-screen flex flex-col items-center justify-center"
+>
+  <div
+    class="w-1/2 rounded-xl bg-white shadow-xl flex flex-col items-center justify-center p-10 gap-8"
+  >
+    <div class="">
+      <img src="./assets/logo.svg" alt="Logo" class="w-32 m-4" />
+    </div>
+    <h2 class="h2">Sign In</h2>
+    <form
+      [formGroup]="signInForm"
+      (submit)="signin()"
+      action=""
+      class="flex flex-col gap-2 justify-center items-center w-full"
+    >
+      <fieldset class="flex flex-col w-1/2">
+        <label for="email" id="emailLabel" class="italic text-passive text-sm"
+          >Email</label
+        >
+        <input
+          type="email"
+          name="email"
+          id="email"
+          formControlName="email"
+          #emailInput
+          (keydown.enter)="emailInput?.blur(); signin()"
+        />
+        <span
+          class="text-rose-500 text-xs italic font-light mt-1"
+          id="emailErrors"
+          >{{ emailErrorMessages }}</span
+        >
+      </fieldset>
+      <fieldset class="flex flex-col w-1/2">
+        <label
+          for="password"
+          id="passwordLabel"
+          class="text-passive italic text-sm"
+          >Password</label
+        >
+        <input
+          type="password"
+          name="password"
+          id="password"
+          formControlName="password"
+          minlength="8"
+          #passwordInput
+          (keydown.enter)="passwordInput?.blur(); signin()"
+        />
+        <span
+          class="text-rose-500 text-xs italic font-light mt-1"
+          id="passwordErrors"
+          >{{ passwordErrorMessages }}</span
+        >
+      </fieldset>
+      <button
+        class="btn btn-primary-outline w-1/2 mt-2"
+        type="submit"
+        *ngIf="!isSigningIn"
+      >
+        Sign In
+      </button>
+      <button
+        class="btn btn-primary-outline-nohover w-1/2 mt-2"
+        *ngIf="isSigningIn"
+      >
+        <app-loader [color]="'#FF5480'"></app-loader>
+      </button>
+    </form>
+
+    <div
+      class="w-1/2 rounded px-10 py-2 h-full bg-yellow text-white"
+      *ngIf="authError"
+    >
+      {{ authErrorsMessage }}
+    </div>
+    <span
+      >Don't have an account?
+      <a class="text-blue underline" routerLink="../signup">Sign up</a></span
+    >
+  </div>
+</div>

@@ -1,0 +1,168 @@
+<app-subscribe-modal
+  (closeModal)="closeSubscribeModal($event)"
+  *ngIf="!isModalClosed"
+></app-subscribe-modal>
+
+<div class="container mx-auto mt-10 flex flex-col gap-32">
+  <div class="flex flex-col items-center p-10">
+    <app-hero-latest-posts [blogDetails]="blogDetails"></app-hero-latest-posts>
+  </div>
+  <app-reading-lists></app-reading-lists>
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-row justify-between items-center">
+      <span class="title1">Popular</span>
+      <a
+        class="hover:text-hover text-passive transition-all duration-300 ease-in-out"
+        >View all</a
+      >
+    </div>
+    <div class="grid grid-cols-4 gap-4">
+      <div
+        class="shadow rounded-[8px] col-span-2 row-span-2 overflow-hidden cursor-pointer"
+      >
+        <div class="relative">
+          <div
+            class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
+          >
+            <p class="landingPicAuthor text-white">
+              BY TOMAS LAURINAVICIUS IN DESIGN PROCESS
+            </p>
+            <p class="landingPicHeading text-white">
+              Web page layout 101: website anatomy every designer needs to learn
+            </p>
+            <p class="landingPicContent text-white">
+              User research is the reality check every project needs. Here's our
+              guide to why you should be doing it — and how to get started.
+            </p>
+          </div>
+          <img
+            src="./assets/popularImg.png"
+            class="rounded-[8px] filter peer-hover:blur transition-all duration-300 ease-in-out z-0"
+            alt="image"
+          />
+        </div>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">Freelancing</p>
+        <p class="text-default text-lg">
+          Affiliate Systems Suck, So We Rolled Our Own
+        </p>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">Resource</p>
+        <p class="text-default text-lg">How not to design web forms</p>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">
+          Design Process
+        </p>
+        <p class="text-default text-lg">
+          B2B Lead Generation - Tips and Strategies for 2018
+        </p>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">INSPIRATION</p>
+        <p class="text-default text-lg">8 Best WordPress Ecommerce Plugins</p>
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col justify-start gap-8">
+    <h1 class="title1">Random</h1>
+    <div class="flex flex-row">
+      <div class="flex-1 bg-white rounded-l-[8px] shadow p-10">
+        <p class="landingPicAuthor">BY TOMAS LAURINAVICIUS IN TUTORIALS</p>
+        <p class="landingPicHeading">
+          Mind-Blowing Twitter Stats and Facts on Our Favorite Network (2018)
+        </p>
+        <p class="landingPicContent">
+          User research is the reality check every project needs. Here's our
+          guide to why you should be doing it — and how to get started.
+        </p>
+      </div>
+      <div class="overflow-hidden flex-1">
+        <img
+          src="./assets/random.png"
+          alt="img"
+          class="flex-1 rounded-r-[8px] hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col gap-8">
+    <div class="flex flex-row justify-between items-center">
+      <span class="title1">Essentials</span>
+      <a
+        class="hover:text-hover text-passive transition-all duration-300 ease-in-out"
+        >View all</a
+      >
+    </div>
+    <div class="grid grid-cols-4 gap-4">
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">
+          DESIGN PROCESS
+        </p>
+        <p class="text-default text-lg">
+          Is WordPress Secure? Here's What the Data Says
+        </p>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">FREELANCING</p>
+        <p class="text-default text-lg">What's New in PHP 7.3 (Coming Soon)</p>
+      </div>
+      <div
+        class="shadow rounded-[8px] col-span-2 row-span-2 overflow-hidden cursor-pointer"
+      >
+        <div class="relative">
+          <div
+            class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
+          >
+            <p class="landingPicAuthor text-white">
+              BY TOMAS LAURINAVICIUS IN FREELANCING
+            </p>
+            <p class="landingPicHeading text-white">
+              How to Fix the WordPress HTTP Error (Uploading Images to Media
+              Library)
+            </p>
+            <p class="landingPicContent text-white">
+              User research is the reality check every project needs. Here's our
+              guide to why you should be doing it — and how to get started.
+            </p>
+          </div>
+          <img
+            src="./assets/essentials.png"
+            class="rounded-[8px] filter peer-hover:blur transition-all duration-300 ease-in-out z-0"
+            alt="image"
+          />
+        </div>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">WEB DESIGN</p>
+        <p class="text-default text-lg">
+          How to Create a Quora Marketing Strategy
+        </p>
+      </div>
+      <div
+        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
+      >
+        <p class="text-passive text-base uppercase font-normal">TUTORIALS</p>
+        <p class="text-default text-lg">
+          Find the Ideal WordPress Calendar Plugin
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

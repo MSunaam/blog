@@ -1,0 +1,46 @@
+<dialog
+  open
+  class="fixed top-0 left-0 w-full h-full z-50 bg-[rgba(0,0,0,0.4)] overflow-hidden"
+  (click)="checkModalClose($event)"
+>
+  <div
+    #modalDialog
+    class="z-[100] gap-4 w-3/5 relative mt-[15%] mx-auto p-10 flex items-center justify-center flex-col rounded-[5px] shadow-xl bg-[#F9F9FB]"
+  >
+    <div
+      class="absolute top-5 right-10 cursor-pointer"
+      (click)="closeModal.emit(true)"
+    >
+      Close
+    </div>
+    <div class="text-center mt-4">
+      <p class="title1">Get Free Technology insights...</p>
+      <p class="title3">
+        In your inbox, every other week. And unsubscribe in a click, if you
+        want.
+      </p>
+    </div>
+    <div class="flex flex-col items-start">
+      <form
+        [formGroup]="subscribeForm"
+        (submit)="submitForm()"
+        class="flex flex-row"
+      >
+        <input
+          type="email"
+          name="email"
+          id="email"
+          class="rounded-l-[40px] w-[110%] bg-white px-5 h-[50px] focus:outline-none translate-x-[10%]"
+          [ngClass]="emailInvalid ? 'border border-red' : ''"
+          placeholder="Your email"
+          formControlName="email"
+          (keydown.enter)="emailInput.blur(); submitForm()"
+          #emailInput
+        />
+
+        <button class="btn btn-primary-curve text-white z-10">Subscibe</button>
+      </form>
+      <p class="text-sm italic text-red mt-1 ml-9">{{ emailErrorMessage }}</p>
+    </div>
+  </div>
+</dialog>

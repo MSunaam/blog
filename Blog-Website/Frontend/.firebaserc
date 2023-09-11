@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "blog-website-de252": {
+      "hosting": {
+        "blog-website": [
+          "blog-website-de252"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "blog-website-de252"
+  }
+}

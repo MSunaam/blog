@@ -1,0 +1,104 @@
+<div class="new-grid-container" *ngIf="mostRecentBlog; else emptyRecentPost">
+  <div
+    class="relative"
+    [routerLink]="'/post'"
+    [queryParams]="{ id: mostRecentBlog._id }"
+  >
+    <div class="overflow-hidden rounded-[8px]">
+      <div
+        class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
+      >
+        <div class="flex flex-col">
+          <p class="landingPicAuthor text-white">
+            BY {{ mostRecentBlog.author.name | uppercase }} IN
+            {{
+              getCategoryValue(mostRecentBlog.category.toUpperCase())
+                | uppercase
+            }}
+          </p>
+          <p class="landingPicHeading text-white">
+            {{ mostRecentBlog.title | uppercase }}
+          </p>
+        </div>
+        <p class="landingPicContent text-white">
+          {{ mostRecentBlog.summary }}
+        </p>
+      </div>
+      <div
+        class="max-h-[450px] overflow-hidden filter peer-hover:blur transition-all duration-300 ease-in-out"
+      >
+        <img
+          [src]="sanitizeImageUrl(mostRecentBlog.leadImage)"
+          alt="Landing Pic"
+          class="rounded-[8px] filter peer-hover:blur transition-all duration-300 ease-in-out z-0 landingPic"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="flex flex-col w-full h-full">
+    <div class="flex items-center justify-between w-full">
+      <span class="title2">New</span>
+      <span
+        class="passiveText hover:text-hover transition-all duration-300 ease-in-out"
+        >View all new</span
+      >
+    </div>
+    <hr />
+    <div class="flex flex-col gap-5 overflow-auto basis-96">
+      <ng-container *ngIf="blogDetails.length > 0; else onePostOnly">
+        <ng-container *ngFor="let blog of blogDetails">
+          <app-new-card
+            [blogDetails]="blog"
+            (blogClicked)="blogClicked($event)"
+          ></app-new-card>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<ng-template #onePostOnly>
+  <div class="text-lg text-center mt-10">That's all for today</div>
+</ng-template>
+
+<ng-template #emptyRecentPost>
+  <div class="new-grid-container">
+    <div class="relative">
+      <div class="overflow-hidden rounded-[8px]">
+        <div
+          class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
+        >
+          <div class="flex flex-col">
+            <p class="landingPicAuthor text-white">OOOPS! NO POSTS FOUND</p>
+            <p class="landingPicHeading text-white">Please check back later</p>
+          </div>
+          <p class="landingPicContent text-white">
+            Looks like we don't have any posts yet. Please check back later.
+          </p>
+        </div>
+        <div
+          class="max-h-[450px] overflow-hidden filter peer-hover:blur transition-all duration-300 ease-in-out"
+        >
+          <img
+            src="./assets/shoot.jpg"
+            alt="Landing Pic"
+            class="rounded-[8px] z-0 landingPic"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="flex flex-col w-full h-full">
+      <div class="flex items-center justify-between w-full">
+        <span class="title2">New</span>
+        <span
+          class="passiveText hover:text-hover transition-all duration-300 ease-in-out"
+          >View all new</span
+        >
+      </div>
+      <hr />
+      <div class="flex flex-col gap-5 overflow-auto basis-96">
+        <div class="text-lg text-center mt-10">No Posts Found</div>
+      </div>
+    </div>
+  </div>
+</ng-template>

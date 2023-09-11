@@ -1,0 +1,403 @@
+/* You can add global styles to this file, and also import other style files */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import 'swiper/scss';
+@import 'swiper/scss/navigation';
+@import 'swiper/scss/pagination';
+
+@import '~quill/dist/quill.snow.css';
+
+#userBio {
+    h1 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+    h2{
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #000;
+        margin-bottom: 0.5rem;
+    }
+
+    ol {
+        list-style-type: disc !important;
+        list-style-position: inside;
+    }
+    ul{
+        list-style-type: disc !important;
+        list-style-position: inside;
+    }
+}
+
+.ql-toolbar{
+    position: sticky;
+}
+
+.ql-container{
+    overflow-x: auto;
+    height: 250px;
+}
+.ql-syntax{
+    background-color: #000;
+    color: #fff;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+//variable
+$lightenColor : 0.8;
+//dimensions
+$regularBtnWidth: 120px;
+$regularBtnHeight: 40px;
+$regularBtnBorderRadius: 10px;
+$curveBtnWidth: 120px;
+$curveBtnHeight: 40px;
+$curveBtnBorderRadius: 40px;
+//colors
+$primaryColor: #FF5480;
+$secondaryColor: #E4E4E4;
+$successColor: #9283E0;
+$dangerColor: #00DC90;
+$warningColor: #FFD581;
+//text color
+$textColor: #111210;
+
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: #FFF;
+    // font-family: 'Open Sans';
+    color: $textColor;
+}
+
+body{
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    /* 362.5% */
+    letter-spacing: -0.1px;
+    background-color: #F9F9FB;
+}
+
+.btn{
+    padding: 0 20px;
+    height: $regularBtnHeight;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $regularBtnBorderRadius;
+    font-size: 16px;
+    font-style: normal;
+    
+    line-height: normal;
+    letter-spacing: -0.375px;
+    transition: all 200ms ease-in-out;
+}
+
+.btn-primary{
+    color: white;
+    background: $primaryColor;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-secondary {
+    background: $secondaryColor;
+    color: #111210;
+    &:hover {
+            filter: brightness($lightenColor);
+        }
+}
+.btn-success {
+    background: $successColor;
+    color: white;
+    &:hover {
+            filter: brightness($lightenColor);
+        }
+}
+.btn-danger {
+    background: $dangerColor;
+    color: white;
+    &:hover {
+            filter: brightness($lightenColor);
+        }
+}
+.btn-warning {
+    background: $warningColor;
+    color: white;
+    &:hover {
+            filter: brightness($lightenColor);
+        }
+}
+.btn-primary-outline{
+    color: $primaryColor;
+    border:2px solid $primaryColor;
+    &:hover{
+        background: $primaryColor;
+        color: #FFF;
+    }
+}
+.btn-secondary-outline {
+    color: #9B9B9B;
+    border: 2px solid #9B9B9B;
+    &:hover{
+        background: #9B9B9B;
+        color: #FFF;
+    }
+}
+.btn-success-outline {
+    color: $successColor;
+    border: 2px solid $successColor;
+    &:hover{
+        background: $successColor;
+        color: #FFF;
+    }
+}
+.btn-danger-outline {
+    color: $dangerColor;
+    border: 2px solid $dangerColor;
+    &:hover{
+        background: $dangerColor;
+        color: #FFF;
+    }
+}
+.btn-warning-outline {
+    color: $warningColor;
+    border: 2px solid $warningColor;
+    &:hover{
+        background: $warningColor;
+        color: #FFF;
+    }
+}
+.btn-primary-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    background: $primaryColor;
+    color: white;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-secondary-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    background: $secondaryColor;
+    color: #111210;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-success-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    background: $successColor;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-danger-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    background: $dangerColor;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-warning-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    background: $warningColor;
+    &:hover{
+        filter: brightness($lightenColor);
+    }
+}
+.btn-primary-outline-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    color: $primaryColor;
+    border:2px solid $primaryColor;
+    &:hover{
+        background: $primaryColor;
+        color: #FFF;
+    }
+}
+.btn-secondary-outline-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    color: #9B9B9B;
+    border: 2px solid #9B9B9B;
+    &:hover{
+        background: #9B9B9B;
+        color: #FFF;
+    }
+}
+.btn-success-outline-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    color: $successColor;
+    border: 2px solid $successColor;
+    &:hover{
+        background: $successColor;
+        color: #FFF;
+    }
+}
+.btn-danger-outline-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    color: $dangerColor;
+    border: 2px solid $dangerColor;
+    &:hover{
+        background: $dangerColor;
+        color: #FFF;
+    }
+}
+.btn-warning-outline-curve{
+    width: $curveBtnWidth;
+    height: $curveBtnHeight;
+    border-radius: $curveBtnBorderRadius;
+    color: $warningColor;
+    border: 2px solid $warningColor;
+    &:hover{
+        background: $warningColor;
+        color: #FFF;
+    }
+}
+
+.h1{
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 58px;
+    /* 120.833% */
+    letter-spacing: -0.3px;
+}
+
+.h2{    
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 58px;
+    /* 161.111% */
+    letter-spacing: -0.225px;
+}
+
+.h3{
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 58px;
+    /* 207.143% */
+    letter-spacing: -0.175px;
+}
+
+.h4{
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 58px;
+    /* 322.222% */
+    letter-spacing: -0.112px;
+}
+
+.h5{
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 58px;
+    /* 362.5% */
+    letter-spacing: -0.1px;
+}
+
+.h6{
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 58px;
+    /* 414.286% */
+    letter-spacing: -0.087px;
+}
+
+.blockquote{
+    color: #9283E0;
+    font-size: 24px;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 58px;
+    /* 241.667% */
+    letter-spacing: -0.15px;
+}
+
+.title1{
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 58px;
+    /* 161.111% */
+    letter-spacing: -0.225px;
+}
+
+.title2{
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 58px;
+    /* 241.667% */
+    letter-spacing: -0.15px;
+}
+
+.title3{
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    // line-height: 58px;
+    /* 322.222% */
+    letter-spacing: -0.112px;
+}
+
+.passiveText{
+    color: #9B9B9B;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 58px;
+    /* 362.5% */
+    letter-spacing: -0.1px;
+}
+
+body.modal-open{
+    overflow: hidden;
+}
+
+.btn-disabled{
+    color: white;
+    background: gray;
+
+    &:hover {
+        filter: brightness($lightenColor);
+        cursor:not-allowed;
+    }
+}
+
+
+
+
+
+
+

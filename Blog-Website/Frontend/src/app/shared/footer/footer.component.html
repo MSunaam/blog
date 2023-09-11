@@ -1,0 +1,64 @@
+<hr class="mt-10" />
+<footer class="mt-2">
+  <div class="bg-[#F9F9FB]">
+    <div
+      class="container mx-auto transition-all duration-300 ease-linear overflow-hidden"
+      [ngClass]="isFooterCollapsed ? 'max-h-0' : 'max-h-96 py-10'"
+    >
+      <div class="flex flex-row gap-52 justify-between">
+        <div
+          class="flex flex-col"
+          *ngFor="let heading of footerText | keyvalue"
+        >
+          <span class="footer-column-heading">{{
+            heading.key == "Social Media" ? "&nbsp;" : heading.key
+          }}</span>
+          <ul class="flex flex-col justify-center">
+            <ng-container
+              *ngIf="heading.key != 'Social Media'; else socialMedia"
+            >
+              <li *ngFor="let item of heading.value">
+                <a class="footer-column-text">{{ item }}</a>
+              </li>
+            </ng-container>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="bg-white mt-10">
+    <div class="container mx-auto flex items-center h-24 justify-between">
+      <div class="flex flex-row gap-9 items-center h-full">
+        <div>
+          <img src="./assets/logo-passive.png" alt="Logo Passive" />
+        </div>
+        <span class="text-passive text-sm font-normal mt-2"
+          >All Rights Reserved 2018 Muhammad Sunaam</span
+        >
+      </div>
+      <div (click)="isFooterCollapsed = !isFooterCollapsed">
+        <img
+          src="./assets/arrow-up.svg"
+          alt="Arrow"
+          class="transition-all duration-300 ease-in-out cursor-pointer"
+          [ngClass]="isFooterCollapsed ? '' : 'rotate-180'"
+        />
+      </div>
+    </div>
+  </div>
+</footer>
+
+<ng-template #socialMedia>
+  <ng-container *ngFor="let icon of footerText | keyvalue">
+    <ng-container *ngIf="icon.key == 'Social Media'">
+      <li
+        *ngFor="let iconDetail of icon.value"
+        class="transition-all duration-300 ease-in-out hover:scale-125"
+      >
+        <a class="footer-column-text">
+          <i class="bx {{ iconDetail }} bx-sm"></i>
+        </a>
+      </li>
+    </ng-container>
+  </ng-container>
+</ng-template>

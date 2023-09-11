@@ -1,0 +1,22 @@
+
+$primaryColor: #FF5480;
+
+input {
+    border: 1px solid black;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: 4px;
+}
+
+.btn-primary-outline-nohover{
+    color: $primaryColor;
+    border: 2px solid $primaryColor;
+}
+
+.invalidInput{
+    border: 1px solid red;
+    color: red;
+}
+.invalidLabel{
+    color: red;
+}

@@ -1,0 +1,101 @@
+<div
+  class="container mx-auto w-screen h-screen flex items-center justify-center"
+>
+  <div
+    class="w-1/2 rounded-xl bg-white shadow-xl flex flex-col items-center justify-center p-10 gap-8"
+  >
+    <div class="">
+      <img src="./assets/logo.svg" alt="Logo" class="w-32 m-4" />
+    </div>
+    <h2 class="h2">Sign Up</h2>
+    <form
+      [formGroup]="signUpForm"
+      (submit)="signup()"
+      action=""
+      class="flex flex-col gap-2 justify-center items-center w-full"
+    >
+      <fieldset class="flex flex-col w-1/2">
+        <label for="name" id="nameLabel" class="italic text-passive text-sm"
+          >Name</label
+        >
+        <input
+          type="text"
+          name="text"
+          id="name"
+          formControlName="name"
+          #nameInput
+          (keydown.enter)="nameInput.blur(); signup()"
+        />
+        <span
+          class="text-rose-500 text-xs italic font-light mt-1"
+          id="nameErrors"
+          >{{ nameErrorMessages }}</span
+        >
+      </fieldset>
+      <fieldset class="flex flex-col w-1/2">
+        <label for="email" id="emailLabel" class="italic text-passive text-sm"
+          >Email</label
+        >
+        <input
+          type="email"
+          name="email"
+          id="email"
+          formControlName="email"
+          #emailInput
+          (keydown.enter)="emailInput.blur(); signup()"
+        />
+        <span
+          class="text-rose-500 text-xs italic font-light mt-1"
+          id="emailErrors"
+          >{{ emailErrorMessages }}</span
+        >
+      </fieldset>
+      <fieldset class="flex flex-col w-1/2">
+        <label
+          for="password"
+          id="passwordLabel"
+          class="text-passive italic text-sm"
+          >Password</label
+        >
+        <input
+          type="password"
+          name="password"
+          id="password"
+          #passwordInput
+          formControlName="password"
+          minlength="8"
+          (keydown.enter)="passwordInput.blur(); signup()"
+        />
+        <span
+          class="text-rose-500 text-xs italic font-light mt-1"
+          id="passwordErrors"
+          >{{ passwordErrorMessages }}</span
+        >
+      </fieldset>
+      <button
+        class="btn btn-primary-outline w-1/2 mt-2"
+        type="submit"
+        *ngIf="!isSigningUp"
+      >
+        Sign Up
+      </button>
+      <button
+        class="btn btn-primary-outline-nohover w-1/2 mt-2"
+        *ngIf="isSigningUp"
+      >
+        <app-loader [color]="'#FF5480'"></app-loader>
+      </button>
+    </form>
+
+    <div
+      class="w-1/2 rounded px-10 py-2 h-full bg-yellow text-white"
+      *ngIf="authError"
+    >
+      {{ authErrorsMessage }}
+    </div>
+    <span
+      >Already have an account?
+      <a class="text-blue underline" routerLink="../signin">Sign in</a></span
+    >
+  </div>
+</div>
