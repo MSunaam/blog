@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BlogPost } from 'src/app/shared/Interfaces/blog';
 import { User } from 'src/app/shared/Interfaces/user';
@@ -17,7 +17,8 @@ export class PostComponent implements OnInit, OnDestroy {
     private _postService: PostService,
     private _route: ActivatedRoute,
     private _sanitizer: DomSanitizer,
-    private _userService: UserService
+    private _userService: UserService,
+    private _router: Router
   ) {}
 
   //if preview is true
@@ -34,6 +35,13 @@ export class PostComponent implements OnInit, OnDestroy {
   loggedInUserSubscription!: Subscription;
 
   allowEdit: boolean = false;
+
+  editPost() {
+    if (this.isPreview) {
+      this._postService.setPreviewPost(this.blogPost);
+      this._router.navigate(['/write-blog']);
+    }
+  }
 
   checkAllowEdit() {
     if (this.loggedInUser._id === this.blogPost.author._id) {

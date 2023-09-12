@@ -19,7 +19,11 @@
             <h1 class="text-[36px] font-bold text-[#4A4A4A]">
               {{ blogPost.title }}
             </h1>
-            <button class="btn btn-success-outline-curve" *ngIf="allowEdit">
+            <button
+              class="btn btn-success-outline-curve"
+              *ngIf="allowEdit"
+              (click)="editPost()"
+            >
               Edit
             </button>
           </div>
@@ -83,11 +87,18 @@
                 </div>
               </div>
               <div class="mt-10">
-                {{ blogPost.content }}
+                <div
+                  class="ql-editor"
+                  [innerHTML]="blogPost.content"
+                  id="blogPostContent"
+                ></div>
               </div>
             </div>
             <div class="w-10 flex flex-col gap-3">
-              <div class="flex flex-col items-center justify-center">
+              <div
+                class="flex flex-col items-center justify-center"
+                [ngClass]="isPreview ? 'pointer-events-none' : ''"
+              >
                 <i
                   class="bx bxs-heart bx-sm hover:cursor-pointer text-[#FF5480]"
                   *ngIf="liked"

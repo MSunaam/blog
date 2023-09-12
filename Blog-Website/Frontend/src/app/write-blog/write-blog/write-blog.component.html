@@ -5,25 +5,37 @@
 <div class="container mx-auto w-full h-full p-10">
   <form [formGroup]="newBlogPostForm">
     <div class="w-full flex flex-col items-start justify-center gap-10">
-      <input
-        formControlName="titleInput"
-        type="text"
-        class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
-        placeholder="Title"
-      />
-      <input
-        formControlName="summaryInput"
-        type="text"
-        class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
-        placeholder="Summary"
-      />
-      <div class="w-full">
+      <div class="flex flex-row w-full gap-2">
+        <div class="flex flex-col gap-10 w-full">
+          <input
+            formControlName="titleInput"
+            type="text"
+            class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
+            placeholder="Title"
+          />
+          <input
+            formControlName="summaryInput"
+            type="text"
+            class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
+            placeholder="Summary"
+          />
+        </div>
+        <div class="flex w-[30%]"></div>
+      </div>
+      <div class="w-full min-h-fit border border-black">
         <quill-editor
           formControlName="blogContentControl"
           format="html"
           [sanitize]="true"
           placeholder="Your awesome blog..."
           [trimOnValidation]="true"
+          [styles]="{
+            height: '100%',
+            width: '100%',
+            'min-height': '300px',
+            'min-width': '100%',
+            'max-height': '80vh'
+          }"
         ></quill-editor>
       </div>
       <div class="w-full flex flex-row justify-end gap-2">

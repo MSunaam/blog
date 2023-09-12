@@ -21,6 +21,16 @@ export class WriteBlogComponent implements OnInit {
     private _router: Router
   ) {}
 
+  editorConfig = {
+    handlers: {
+      link: function (value: string) {
+        if (value) {
+          var href = prompt('Enter the URL');
+        }
+      },
+    },
+  };
+
   newBlogPostForm = new FormGroup({
     titleInput: new FormControl(),
     summaryInput: new FormControl(),
@@ -60,6 +70,13 @@ export class WriteBlogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this._userService.user$.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        // this.newBlog = emptyPost(user);
+      },
+    });
+
     this._postService.getPreviewPost().subscribe({
       next: (post) => {
         this.newBlog = post;
@@ -74,12 +91,7 @@ export class WriteBlogComponent implements OnInit {
         );
       },
     });
-    this._userService.user$.subscribe({
-      next: (user) => {
-        this.currentUser = user;
-        this.newBlog = emptyPost(user);
-      },
-    });
+
     this._titleService.setTitle('Write Blog');
     this.titleInput!.valueChanges.pipe(distinctUntilChanged()).subscribe(
       (value) => {
