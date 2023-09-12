@@ -54,6 +54,15 @@ export class WriteBlogComponent implements OnInit {
 
   isCancelPostModalOpen: boolean = false;
 
+  saveDraftPost() {
+    this._postService.saveDraftPost(this.newBlog).subscribe({
+      next: (post) => {
+        console.log(post);
+      },
+      error: console.error,
+    });
+  }
+
   openCancelPostModal() {
     this.isCancelPostModalOpen = true;
   }

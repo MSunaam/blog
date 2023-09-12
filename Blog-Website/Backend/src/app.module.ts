@@ -7,6 +7,7 @@ import { BlogPostModule } from './blog-post/blog-post.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { AuthModule } from './auth/auth.module';
+import { DraftPostModule } from './draft-post/draft-post.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthModule } from './auth/auth.module';
       rootPath: join(__dirname, '..', 'Uploads'),
     }),
     AuthModule,
+    DraftPostModule,
   ],
   controllers: [AppController],
   providers: [AppService],

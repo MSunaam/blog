@@ -15,11 +15,6 @@ import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) {}
 
-  @Post('save-draft')
-  saveDraft(@Body() createBlogPostDto: CreateBlogPostDto) {
-    return this.blogPostService.saveDraft(createBlogPostDto);
-  }
-
   @Post()
   create(@Body() createBlogPostDto: CreateBlogPostDto) {
     return this.blogPostService.create(createBlogPostDto);

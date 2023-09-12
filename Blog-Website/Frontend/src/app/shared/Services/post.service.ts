@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { BlogPost } from '../Interfaces/blog';
 import { User } from '../Interfaces/user';
 import { ReplaySubject, Subject } from 'rxjs';
+import { DraftPost, newDraftPost } from '../Interfaces/draftPost';
 
 @Injectable({
   providedIn: 'root',
@@ -14,16 +15,31 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  saveDraftPost(draftPost: BlogPost) {
+    // console.log(draftPost);
+    const savePost = newDraftPost(
+      draftPost._id,
+      draftPost.title,
+      draftPost.content,
+      draftPost.author._id,
+      '',
+      draftPost.category,
+      draftPost.summary,
+      draftPost.leadImage
+    );
+
+    return this._httpClient.post<DraftPost>(
+      'http://localhost:3000/draft-post',
+      { savePost }
+    );
+  }
+
   setPreviewPost(blogPost: BlogPost) {
     // console.log(blogPost);
     // console.log('set');
     localStorage.setItem('previewPost', JSON.stringify(blogPost));
 
     this.previewBlogPost.next(blogPost);
-  }
-
-  saveDraftPost(post: BlogPost) {
-    return;
   }
 
   getPreviewPost() {
