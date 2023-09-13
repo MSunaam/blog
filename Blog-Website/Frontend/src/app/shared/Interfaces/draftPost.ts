@@ -23,7 +23,6 @@ export const newDraftPost = (
   leadImage: string = ''
 ) => {
   return {
-    _id,
     title,
     content,
     author,

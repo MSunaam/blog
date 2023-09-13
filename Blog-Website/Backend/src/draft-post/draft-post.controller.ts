@@ -31,6 +31,11 @@ export class DraftPostController {
     return this.draftPostService.findAll();
   }
 
+  @Get('latest')
+  getLatestDraftPost(@Param('userID') userID: string) {
+    return this.draftPostService.getLatestDraftPost(userID);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.draftPostService.findOne(+id);

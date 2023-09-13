@@ -79,6 +79,9 @@ export class WriteBlogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.newBlog = emptyPost(this.currentUser);
+    this.newBlog.publishDate = new Date().toISOString();
+
     this._userService.user$.subscribe({
       next: (user) => {
         this.currentUser = user;
@@ -86,10 +89,13 @@ export class WriteBlogComponent implements OnInit {
       },
     });
 
-    this._postService.getPreviewPost().subscribe({
-      next: (post) => {
+    this._postService.getPreviewPost(this.currentUser._id).subscribe({
+      next: (post: BlogPost | null) => {
+        // console.log(post);
+
+        if (!post) return;
+
         this.newBlog = post;
-        // console.log(this.newBlog);
         this.newBlogPostForm.patchValue(
           {
             titleInput: this.newBlog.title,
@@ -121,7 +127,5 @@ export class WriteBlogComponent implements OnInit {
     ).subscribe((value) => {
       this.newBlog.content = value;
     });
-
-    this.newBlog.publishDate = new Date().toISOString();
   }
 }

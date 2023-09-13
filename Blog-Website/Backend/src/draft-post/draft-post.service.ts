@@ -20,6 +20,17 @@ export class DraftPostService {
     return this._userModel.updateMany({}, { $set: { draftPosts: [] } });
   }
 
+  async getLatestDraftPost(userID: string) {
+    const draftPosts = await this._draftPostModel
+      .find({})
+      .where('author')
+      .equals(userID)
+      .sort({ lastUpdated: -1 })
+      .limit(1);
+    if (draftPosts.length === 0) return null;
+    return draftPosts[0];
+  }
+
   async create(createDraftPostDto: CreateDraftPostDto) {
     const checkPost = await this._draftPostModel
       .findOne({})
@@ -28,15 +39,13 @@ export class DraftPostService {
     if (checkPost) {
       return this.update(checkPost.id, createDraftPostDto);
     }
-    log(createDraftPostDto.author);
-    // const newDraftPost = new this._draftPostModel(createDraftPostDto);
-    // const user = await this._userModel.findOne({
-    //   email: createDraftPostDto.author.email,
-    // });
-    // if (!user) throw new NotFoundException('User not found');
-    // user.draftPosts.push(newDraftPost);
-    // await user.save();
-    // return newDraftPost.save();
+    // log(createDraftPostDto);
+    const newDraftPost = new this._draftPostModel(createDraftPostDto);
+    const user = await this._userModel.findById(createDraftPostDto.author);
+    if (!user) throw new NotFoundException('User not found');
+    user.draftPosts.push(newDraftPost);
+    await user.save();
+    return newDraftPost.save();
   }
 
   findAll() {

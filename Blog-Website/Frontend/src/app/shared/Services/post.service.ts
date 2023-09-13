@@ -30,7 +30,7 @@ export class PostService {
 
     return this._httpClient.post<DraftPost>(
       'http://localhost:3000/draft-post',
-      { savePost }
+      { ...savePost }
     );
   }
 
@@ -42,13 +42,14 @@ export class PostService {
     this.previewBlogPost.next(blogPost);
   }
 
-  getPreviewPost() {
+  getPreviewPost(userID: string) {
     // console.log('get');
-    const previewPost = localStorage.getItem('previewPost');
-    if (previewPost) {
-      this.previewBlogPost.next(JSON.parse(previewPost));
-    }
-    return this.previewBlogPost.asObservable();
+    return this._httpClient.get<BlogPost | null>(
+      'http://localhost:3000/draft-post/latest',
+      {
+        params: { userID: userID },
+      }
+    );
   }
 
   getBlogPost(id: string) {
