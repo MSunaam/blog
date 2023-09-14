@@ -22,7 +22,7 @@
         </div>
         <div class="flex w-[30%]"></div>
       </div>
-      <div class="w-full min-h-fit border border-black">
+      <div class="w-full min-h-fit flex flex-row gap-5 divide-x-2">
         <quill-editor
           formControlName="blogContentControl"
           format="html"
@@ -30,13 +30,23 @@
           placeholder="Your awesome blog..."
           [trimOnValidation]="true"
           [styles]="{
-            height: '100%',
-            width: '100%',
             'min-height': '300px',
-            'min-width': '100%',
             'max-height': '80vh'
           }"
         ></quill-editor>
+        <div class="px-5">
+          <input
+            type="file"
+            class="hidden"
+            #leadImageInput
+            [formControl]="leadImageControl"
+            (change)="onFileChangeEvent($event)"
+          />
+          <button class="btn btn-primary" (click)="leadImageInput.click()">
+            Add Lead Image
+          </button>
+          <img src="" alt="" />
+        </div>
       </div>
       <div class="w-full flex flex-row justify-end gap-2">
         <button class="btn btn-success-outline" (click)="previewBlogPost()">

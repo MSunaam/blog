@@ -21,6 +21,9 @@ export class WriteBlogComponent implements OnInit {
     private _router: Router
   ) {}
 
+  leadImage!: File;
+  leadImageFile!: string;
+
   editorConfig = {
     handlers: {
       link: function (value: string) {
@@ -30,6 +33,8 @@ export class WriteBlogComponent implements OnInit {
       },
     },
   };
+
+  leadImageControl = new FormControl();
 
   newBlogPostForm = new FormGroup({
     titleInput: new FormControl(),
@@ -61,6 +66,17 @@ export class WriteBlogComponent implements OnInit {
       },
       error: console.error,
     });
+  }
+
+  onFileChangeEvent(event: any) {
+    const file = event.target.files[0];
+    this.leadImage = file;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      this.leadImageFile = reader.result as string;
+      // console.log(this.profileImage);
+    };
+    reader.readAsDataURL(file);
   }
 
   openCancelPostModal() {
