@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
 import { Router } from '@angular/router';
-import { distinctUntilChanged } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 import { BlogPost, emptyPost } from 'src/app/shared/Interfaces/blog';
 import { User } from 'src/app/shared/Interfaces/user';
 import { PostService } from 'src/app/shared/Services/post.service';
@@ -21,8 +21,32 @@ export class WriteBlogComponent implements OnInit {
     private _router: Router
   ) {}
 
-  leadImage!: File;
-  leadImageFile!: string;
+  isDraftPostEmpty() {
+    return this.newBlog === emptyPost(this.currentUser);
+  }
+
+  createNewDarft() {
+    console.log(this.newBlog);
+
+    this._postService.saveDraftPost(this.newBlog).subscribe({
+      next: (res) => {
+        this.newBlog = emptyPost(this.currentUser);
+      },
+      error: console.error,
+    });
+  }
+
+  saveChangesLoader: boolean = false;
+
+  isLeadImageModalOpen: boolean = false;
+
+  openLeadImageModal() {
+    this.isLeadImageModalOpen = true;
+  }
+
+  closeLeadImageModal(event: boolean) {
+    this.isLeadImageModalOpen = false;
+  }
 
   editorConfig = {
     handlers: {
@@ -60,23 +84,16 @@ export class WriteBlogComponent implements OnInit {
   isCancelPostModalOpen: boolean = false;
 
   saveDraftPost() {
+    this.saveChangesLoader = true;
     this._postService.saveDraftPost(this.newBlog).subscribe({
       next: (post) => {
-        console.log(post);
+        // console.log(post);
+        setTimeout(() => {
+          this.saveChangesLoader = false;
+        }, 1000);
       },
       error: console.error,
     });
-  }
-
-  onFileChangeEvent(event: any) {
-    const file = event.target.files[0];
-    this.leadImage = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      this.leadImageFile = reader.result as string;
-      // console.log(this.profileImage);
-    };
-    reader.readAsDataURL(file);
   }
 
   openCancelPostModal() {
@@ -91,10 +108,24 @@ export class WriteBlogComponent implements OnInit {
     // return;
 
     this._postService.setPreviewPost(this.newBlog);
-    this._router.navigate(['/post'], { queryParams: { preview: true } });
+    this._router.navigate(['/post'], {
+      queryParams: { preview: true, id: this.newBlog._id },
+      queryParamsHandling: 'merge',
+    });
   }
 
   ngOnInit(): void {
+    this.newBlogPostForm.valueChanges
+      .pipe(debounceTime(3000), distinctUntilChanged())
+      .subscribe((value) => {
+        this._postService.saveDraftPost(this.newBlog).subscribe({
+          next: (post) => {
+            // console.log(post);
+          },
+          error: console.error,
+        });
+      });
+
     this.newBlog = emptyPost(this.currentUser);
     this.newBlog.publishDate = new Date().toISOString();
 
@@ -105,7 +136,7 @@ export class WriteBlogComponent implements OnInit {
       },
     });
 
-    this._postService.getPreviewPost(this.currentUser._id).subscribe({
+    this._postService.getLatestDraftPost(this.currentUser._id).subscribe({
       next: (post: BlogPost | null) => {
         // console.log(post);
 

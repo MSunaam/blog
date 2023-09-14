@@ -34,7 +34,7 @@ export class User {
   views: number;
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BlogPost' }] })
   likedPosts: BlogPost[];
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'BlogPost' }] })
+  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'DraftPost' }] })
   draftPosts: DraftPost[];
 }
 

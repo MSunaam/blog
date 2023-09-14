@@ -1,3 +1,8 @@
+<app-save-lead-image
+  *ngIf="isLeadImageModalOpen"
+  (isModalClosed)="closeLeadImageModal($event)"
+></app-save-lead-image>
+
 <div class="h-20">
   <app-navbar></app-navbar>
 </div>
@@ -20,41 +25,55 @@
             placeholder="Summary"
           />
         </div>
-        <div class="flex w-[30%]"></div>
+        <div class="flex w-[30%] flex-col items-end">
+          <a routerLink="/drafts" class="underline text-[blue] h-min"
+            >Show All Drafts</a
+          >
+          <a
+            class="underline text-[blue] h-min"
+            *ngIf="!isDraftPostEmpty()"
+            (click)="createNewDarft()"
+            >New Post</a
+          >
+        </div>
       </div>
       <div class="w-full min-h-fit flex flex-row gap-5 divide-x-2">
-        <quill-editor
-          formControlName="blogContentControl"
-          format="html"
-          [sanitize]="true"
-          placeholder="Your awesome blog..."
-          [trimOnValidation]="true"
-          [styles]="{
-            'min-height': '300px',
-            'max-height': '80vh'
-          }"
-        ></quill-editor>
-        <div class="px-5">
-          <input
-            type="file"
-            class="hidden"
-            #leadImageInput
-            [formControl]="leadImageControl"
-            (change)="onFileChangeEvent($event)"
-          />
-          <button class="btn btn-primary" (click)="leadImageInput.click()">
+        <div class="flex w-[calc(80%)]">
+          <quill-editor
+            formControlName="blogContentControl"
+            format="html"
+            [sanitize]="true"
+            placeholder="Your awesome blog..."
+            [trimOnValidation]="true"
+            [styles]="{
+              'min-height': '300px',
+              'max-height': '80vh',
+              
+            }"
+          ></quill-editor>
+        </div>
+        <div class="px-5 w-[calc(20%)] flex flex-col gap-5">
+          <button class="btn btn-primary" (click)="openLeadImageModal()">
             Add Lead Image
           </button>
-          <img src="" alt="" />
         </div>
       </div>
       <div class="w-full flex flex-row justify-end gap-2">
         <button class="btn btn-success-outline" (click)="previewBlogPost()">
           Preview
         </button>
-        <button class="btn btn-danger-outline" (click)="saveDraftPost()">
+        <button
+          class="btn btn-danger-outline w-36"
+          *ngIf="!saveChangesLoader; else saveLoader"
+          (click)="saveDraftPost()"
+        >
           Save Changes
         </button>
+        <ng-template #saveLoader>
+          <button class="btn btn-danger-outline w-36">
+            <app-save-loader></app-save-loader>
+          </button>
+        </ng-template>
         <button
           (click)="openCancelPostModal()"
           class="btn btn-secondary-outline"

@@ -4,7 +4,7 @@ import { User } from 'src/user/Schema/user.schema';
 export class CreateDraftPostDto {
   title: string;
   content: string;
-  author: string;
+  author: User;
   lastUpdated: Date;
   category: BlogCategory;
   summary: string;

@@ -16,7 +16,7 @@ export const newDraftPost = (
   _id: string = '',
   title: string = '',
   content: string = '',
-  author: string = '',
+  author: any,
   lastUpdated: string = new Date().toISOString(),
   category: BlogCategory = BlogCategory.TECHNOLOGY,
   summary: string = '',

@@ -79,7 +79,7 @@
         </div>
       </div>
       <div
-        class="flex-grow-[1] cursor-default flex items-center justify-center flex-col gap-2"
+        class="cursor-default flex items-center justify-center flex-col gap-2"
       >
         <div
           class="rounded-[40px] bg-red text-white w-44 px-4 py-3 flex items-center justify-start"
@@ -101,7 +101,7 @@
     </div>
     <hr />
     <div class="flex flex-row justify-between gap-10 divide-x-2">
-      <div class="flex flex-col w-full gap-10">
+      <div class="flex flex-col w-[calc(100%-15rem)] grow-0 gap-10">
         <div class="flex flex-col">
           <div class="flex flex-row gap-4 items-center w-full justify-between">
             <h2 class="h2">Bio</h2>
@@ -172,7 +172,7 @@
           </div>
         </div>
         <hr />
-        <div class="flex flex-col border border-black">
+        <div class="flex flex-col">
           <h2 class="h2">Blogs</h2>
           <div class="flex items-center justify-center">
             <ng-container *ngTemplateOutlet="blogCarousel"></ng-container>
@@ -185,7 +185,7 @@
 </div>
 
 <ng-template #settingsTemplate>
-  <div class="h-full w-60 border border-black px-2 py-5">
+  <div class="h-full w-60 shrink-0 px-2 py-5">
     <h5 class="text-xl py-3 w-full items-center justify-start px-4 flex">
       Settings
     </h5>
@@ -221,28 +221,34 @@
     [config]="swiperConfig"
     class="w-1/2 bg-white rounded flex items-center justify-center"
   >
-    <ng-template swiperSlide *ngFor="let blog of blogPosts">
-      <a [routerLink]="'/post'" [queryParams]="{ id: blog._id }">
-        <div
-          slot=""
-          class="w-full h-full rounded flex flex-col items-center justify-center overflow-hidden"
-        >
-          <div class="flex items-center justify-center overflow-hidden h-60">
-            <img
-              [src]="sanitizeUrls(blog.leadImage)"
-              alt="Lead Img"
-              class="object-cover filter hover:blur transition-all duration-300 ease-in-out"
-            />
+    <ng-container *ngIf="blogPosts; else noBlogPosts">
+      <ng-template swiperSlide *ngFor="let blog of blogPosts">
+        <a [routerLink]="'/post'" [queryParams]="{ id: blog._id }">
+          <div
+            slot=""
+            class="w-full h-full rounded flex flex-col items-center justify-center overflow-hidden"
+          >
+            <div class="flex items-center justify-center overflow-hidden h-60">
+              <img
+                [src]="sanitizeUrls(blog.leadImage)"
+                alt="Lead Img"
+                class="object-cover filter hover:blur transition-all duration-300 ease-in-out"
+              />
+            </div>
+            <div class="bg-white p-5 w-full">
+              <h1 class="title2">{{ blog.title }}</h1>
+              <p class="text-passive italic text-sm">
+                {{ blog.publishDate | date }}
+              </p>
+              <p class="overflow-hidden text-ellipsis mt-3">
+                {{ blog.summary }}
+              </p>
+            </div>
           </div>
-          <div class="bg-white p-5 w-full">
-            <h1 class="title2">{{ blog.title }}</h1>
-            <p class="text-passive italic text-sm">
-              {{ blog.publishDate | date }}
-            </p>
-            <p class="overflow-hidden text-ellipsis mt-3">{{ blog.summary }}</p>
-          </div>
-        </div>
-      </a>
-    </ng-template>
+        </a>
+      </ng-template>
+    </ng-container>
   </swiper>
 </ng-template>
+
+<ng-template #noBlogPosts swiperSlide> No Blog Posts </ng-template>

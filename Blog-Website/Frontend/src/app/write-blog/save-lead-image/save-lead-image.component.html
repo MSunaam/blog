@@ -1,0 +1,19 @@
+<div
+  class="fixed left-0 top-0 h-screen w-screen bg-[rgba(0,0,0,0.4)] flex items-center justify-center z-50"
+  (click)="closeModal($event)"
+>
+  <div
+    #modalContent
+    class="flex flex-col relative items-center justify-center w-1/2 rounded shadow-xl p-10 bg-white"
+  >
+    <span
+      class="absolute top-5 right-8 cursor-pointer"
+      (click)="isModalClosed.emit(false)"
+      >Close</span
+    >
+    <h1 class="h2">Upload Lead Image</h1>
+    <div class="rounded-full h-32 w-32 overflow-hidden">
+      <img src="" alt="" />
+    </div>
+  </div>
+</div>

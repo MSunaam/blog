@@ -6,10 +6,12 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { DraftPostService } from './draft-post.service';
 import { CreateDraftPostDto } from './dto/create-draft-post.dto';
 import { UpdateDraftPostDto } from './dto/update-draft-post.dto';
+import { log } from 'console';
 
 @Controller('draft-post')
 export class DraftPostController {
@@ -23,7 +25,13 @@ export class DraftPostController {
 
   @Post()
   create(@Body() createDraftPostDto: CreateDraftPostDto) {
+    // log(createDraftPostDto);
     return this.draftPostService.create(createDraftPostDto);
+  }
+
+  @Get('user/:userID')
+  findByAuthor(@Param('userID') userID: string) {
+    return this.draftPostService.findByAuthor(userID);
   }
 
   @Get()
@@ -32,7 +40,7 @@ export class DraftPostController {
   }
 
   @Get('latest')
-  getLatestDraftPost(@Param('userID') userID: string) {
+  getLatestDraftPost(@Query('userID') userID: string) {
     return this.draftPostService.getLatestDraftPost(userID);
   }
 

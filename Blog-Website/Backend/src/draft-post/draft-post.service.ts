@@ -15,18 +15,23 @@ export class DraftPostService {
     @InjectModel(User.name) private _userModel: Model<User>,
   ) {}
 
+  async findByAuthor(userID: string) {
+    const user = await this._userModel
+      .findById(userID)
+      .populate('draftPosts')
+      .limit(5);
+    if (!user) throw new NotFoundException('User not found');
+    return user.draftPosts;
+  }
+
   async devDeleteAll() {
     await this._draftPostModel.deleteMany({});
     return this._userModel.updateMany({}, { $set: { draftPosts: [] } });
   }
 
   async getLatestDraftPost(userID: string) {
-    const draftPosts = await this._draftPostModel
-      .find({})
-      .where('author')
-      .equals(userID)
-      .sort({ lastUpdated: -1 })
-      .limit(1);
+    const draftPosts = await this._draftPostModel.find({ author: userID });
+    // log(draftPosts);
     if (draftPosts.length === 0) return null;
     return draftPosts[0];
   }

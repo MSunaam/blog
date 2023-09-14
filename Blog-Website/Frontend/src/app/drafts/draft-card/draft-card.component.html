@@ -1,0 +1,20 @@
+<div
+  class="bg-white flex gap-4 flex-row items-center justify-start rounded shadow w-full"
+  *ngIf="draftPost"
+  (click)="openDraft()"
+>
+  <img
+    [src]="draftPost.leadImage"
+    alt="LeadImg"
+    class="w-40 h-40 object-cover rounded p-2"
+  />
+  <div class="flex flex-row w-full justify-between">
+    <div class="flex w-full justify-start flex-col gap-1">
+      <h3 class="h3">{{ draftPost.title }}</h3>
+      <span class="text-passive">{{ draftPost.summary }}</span>
+    </div>
+    <div>
+      {{ draftPost.lastUpdated | date }}
+    </div>
+  </div>
+</div>

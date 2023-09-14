@@ -66,7 +66,7 @@ export class PostComponent implements OnInit, OnDestroy {
     this.isPreview = this._route.snapshot.queryParams['preview'];
 
     if (this.isPreview) {
-      this._postService.getPreviewPost(this.blogPostId).subscribe({
+      this._postService.getPreviewPost().subscribe({
         next: (post: BlogPost | null) => {
           // console.log(post);
           if (!post) {
