@@ -1,20 +1,29 @@
 .loader {
-    width: 20px;
-    height: 20px;
-    border: 3px solid #FFF;
-    border-bottom-color: transparent;
+    width: 16px;
+    height: 16px;
     border-radius: 50%;
-    display: inline-block;
+    display: block;
+    margin: 15px auto;
+    position: relative;
+    background: #FFF;
+    box-shadow: -24px 0 #FFF, 24px 0 #FFF;
     box-sizing: border-box;
-    animation: rotation 1s linear infinite;
+    animation: shadowPulse 1.5s linear infinite;
 }
 
-@keyframes rotation {
-    0% {
-        transform: rotate(0deg);
+@keyframes shadowPulse {
+    33% {
+        background: #FFF;
+        box-shadow: -24px 0 #FF5480, 24px 0 #FFF;
+    }
+
+    66% {
+        background: #FF5480;
+        box-shadow: -24px 0 #FFF, 24px 0 #FFF;
     }
 
     100% {
-        transform: rotate(360deg);
+        background: #FFF;
+        box-shadow: -24px 0 #FFF, 24px 0 #FF5480;
     }
 }

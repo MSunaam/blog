@@ -4,7 +4,7 @@
 >
   <div
     #modalContent
-    class="flex flex-col relative items-center justify-center w-1/2 rounded shadow-xl p-10 bg-white"
+    class="flex flex-col gap-5 relative items-center justify-center w-1/2 rounded shadow-xl p-10 bg-white"
   >
     <span
       class="absolute top-5 right-8 cursor-pointer"
@@ -12,8 +12,21 @@
       >Close</span
     >
     <h1 class="h2">Upload Lead Image</h1>
-    <div class="rounded-full h-32 w-32 overflow-hidden">
-      <img src="" alt="" />
+    <div class="w-1/2 overflow-hidden rounded">
+      <img [src]="leadImageUrl" alt="" />
+    </div>
+    <input type="file" class="hidden" #imageInput />
+    <div class="flex flex-row gap-2">
+      <button class="btn btn-primary" (click)="imageInput.click()">
+        Upload
+      </button>
+      <button
+        class="btn btn-secondary"
+        [disabled]="!leadImageUrl"
+        [ngClass]="leadImageUrl ? '' : 'btn-disabled'"
+      >
+        Remove
+      </button>
     </div>
   </div>
 </div>

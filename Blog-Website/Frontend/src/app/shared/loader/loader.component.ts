@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { LoaderService } from '../Services/loader.service';
 
 @Component({
   selector: 'app-loader',
@@ -13,15 +14,13 @@ import {
   styleUrls: ['./loader.component.scss'],
 })
 export class LoaderComponent implements AfterViewInit {
-  @Input() color: string = 'white';
+  constructor(private _loaderSerivce: LoaderService) {}
 
-  @ViewChild('loader') loader!: ElementRef;
+  showLoader: boolean = false;
 
   ngAfterViewInit(): void {
-    this.loader.nativeElement.style.setProperty('border-color', this.color);
-    this.loader.nativeElement.style.setProperty(
-      'border-bottom-color',
-      'transparent'
-    );
+    this._loaderSerivce.getLoader().subscribe((showLoader) => {
+      this.showLoader = showLoader;
+    });
   }
 }

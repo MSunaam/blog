@@ -46,7 +46,7 @@ export class DraftPostController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.draftPostService.findOne(+id);
+    return this.draftPostService.findOne(id);
   }
 
   @Patch(':id')

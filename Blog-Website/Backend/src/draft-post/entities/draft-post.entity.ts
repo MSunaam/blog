@@ -7,17 +7,17 @@ export type DraftPostDocument = HydratedDocument<DraftPost>;
 
 @Schema()
 export class DraftPost {
-  @Prop({ required: true })
+  @Prop({ required: false })
   title: string;
-  @Prop({ required: true })
+  @Prop({ required: false })
   content: string;
   @Prop({ required: true, type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   author: User;
   @Prop({ required: false, default: Date.now })
   lastUpdated: Date;
-  @Prop({ required: true })
+  @Prop({ required: false })
   category: BlogCategory;
-  @Prop({ required: true })
+  @Prop({ required: false })
   summary: string;
   @Prop({ required: false, default: 'Images/shoot.jpg' })
   leadImage: string;

@@ -15,28 +15,24 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  getDraftById(id: string) {
+    return this._httpClient.get<DraftPost>(
+      `http://localhost:3000/draft-post/${id}`
+    );
+  }
+
   getAllDrafts(userId: string) {
     return this._httpClient.get<DraftPost[]>(
       `http://localhost:3000/draft-post/user/${userId}`
     );
   }
 
-  saveDraftPost(draftPost: BlogPost) {
-    console.log(draftPost);
-    const savePost = newDraftPost(
-      draftPost._id,
-      draftPost.title,
-      draftPost.content,
-      draftPost.author,
-      '',
-      draftPost.category,
-      draftPost.summary,
-      draftPost.leadImage
-    );
+  saveDraftPost(draftPost: DraftPost) {
+    // console.log(draftPost);
 
     return this._httpClient.post<DraftPost>(
       'http://localhost:3000/draft-post',
-      { ...savePost }
+      { ...draftPost }
     );
   }
 
@@ -54,7 +50,7 @@ export class PostService {
 
   getLatestDraftPost(userID: string) {
     // console.log('get');
-    return this._httpClient.get<BlogPost | null>(
+    return this._httpClient.get<DraftPost | null>(
       'http://localhost:3000/draft-post/latest',
       {
         params: { userID: userID },

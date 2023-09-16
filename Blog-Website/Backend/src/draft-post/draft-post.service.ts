@@ -37,19 +37,21 @@ export class DraftPostService {
   }
 
   async create(createDraftPostDto: CreateDraftPostDto) {
-    const checkPost = await this._draftPostModel
-      .findOne({})
-      .where('title')
-      .equals(createDraftPostDto.title);
-    if (checkPost) {
-      return this.update(checkPost.id, createDraftPostDto);
+    if (!createDraftPostDto._id) {
+      var newDraftPost = new this._draftPostModel(createDraftPostDto);
+      const user = await this._userModel.findById(createDraftPostDto.author);
+      if (!user) throw new NotFoundException('User not found');
+      user.draftPosts.push(newDraftPost);
+      await user.save();
+    } else {
+      var newDraftPost = await this._draftPostModel.findByIdAndUpdate(
+        createDraftPostDto._id,
+        createDraftPostDto,
+        { new: true },
+      );
+      if (!newDraftPost) throw new NotFoundException('Draft post not found');
     }
-    // log(createDraftPostDto);
-    const newDraftPost = new this._draftPostModel(createDraftPostDto);
-    const user = await this._userModel.findById(createDraftPostDto.author);
-    if (!user) throw new NotFoundException('User not found');
-    user.draftPosts.push(newDraftPost);
-    await user.save();
+
     return newDraftPost.save();
   }
 
@@ -57,8 +59,8 @@ export class DraftPostService {
     return `This action returns all draftPost`;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} draftPost`;
+  findOne(id: string) {
+    return this._draftPostModel.findById(id);
   }
 
   async update(id: number, updateDraftPostDto: UpdateDraftPostDto) {

@@ -14,8 +14,8 @@ export class DraftCardComponent implements OnInit {
   @Input() draftPost!: DraftPost;
 
   openDraft() {
-    this._router.navigate(['/post'], {
-      queryParams: { id: this.draftPost._id, preview: true },
+    this._router.navigate(['/write-blog'], {
+      queryParams: { id: this.draftPost._id },
     });
   }
 

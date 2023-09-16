@@ -2,6 +2,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -20,6 +21,8 @@ export class SaveLeadImageComponent implements OnInit, OnDestroy {
   leadImageFile!: string;
 
   @ViewChild('modalContent') modalContent!: ElementRef;
+
+  @Input() leadImageUrl!: string;
 
   @Output() isModalClosed = new EventEmitter<boolean>();
 

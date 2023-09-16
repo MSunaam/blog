@@ -1,5 +1,8 @@
+<app-loader></app-loader>
+
 <app-save-lead-image
   *ngIf="isLeadImageModalOpen"
+  [leadImageUrl]="newDraft.leadImage"
   (isModalClosed)="closeLeadImageModal($event)"
 ></app-save-lead-image>
 
@@ -13,13 +16,13 @@
       <div class="flex flex-row w-full gap-2">
         <div class="flex flex-col gap-10 w-full">
           <input
-            formControlName="titleInput"
+            formControlName="titleInputControl"
             type="text"
             class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
             placeholder="Title"
           />
           <input
-            formControlName="summaryInput"
+            formControlName="summaryInputControl"
             type="text"
             class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
             placeholder="Summary"
@@ -31,7 +34,7 @@
           >
           <a
             class="underline text-[blue] h-min"
-            *ngIf="!isDraftPostEmpty()"
+            *ngIf="!checkIfNewDraftEmpty()"
             (click)="createNewDarft()"
             >New Post</a
           >
@@ -56,6 +59,20 @@
           <button class="btn btn-primary" (click)="openLeadImageModal()">
             Add Lead Image
           </button>
+          <img
+            *ngIf="newDraft.leadImage"
+            [src]="newDraft.leadImage"
+            alt=""
+            class="object-cover rounded shadow"
+          />
+          <button
+            class="btn btn-secondary"
+            [disabled]="!newDraft.leadImage"
+            [ngClass]="newDraft.leadImage ? '' : 'btn-disabled'"
+            (click)="removeLeadImage()"
+          >
+            Remove Lead Image
+          </button>
         </div>
       </div>
       <div class="w-full flex flex-row justify-end gap-2">
@@ -66,6 +83,8 @@
           class="btn btn-danger-outline w-36"
           *ngIf="!saveChangesLoader; else saveLoader"
           (click)="saveDraftPost()"
+          [disabled]="checkIfNewDraftEmpty()"
+          [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
         >
           Save Changes
         </button>

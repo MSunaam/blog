@@ -1,12 +1,48 @@
+<app-loader></app-loader>
+
 <div class="w-full h-full bg-white">
   <div class="h-20">
     <app-navbar></app-navbar>
 
     <div class="container mx-auto mt-10" *ngIf="user">
-      <div class="flex flex-col border border-black">
+      <div class="flex flex-row justify-between items-center w-full my-10">
+        <h1 class="h1">Drafts</h1>
+        <button class="btn-danger-outline btn" (click)="newPost()">
+          New Post
+        </button>
+      </div>
+      <div class="flex flex-col gap-5">
+        <div class="flex flex-row gap-2 items-center justify-start">
+          <div class="flex items-center justify-center gap-1 mb-1 mr-10">
+            <input
+              type="checkbox"
+              class="peer"
+              name="selectAll"
+              id="selectAll"
+              #selectAllInput
+            />
+            <label
+              for="selectAll"
+              class="pt-[1px] text-passive peer-checked:text-black"
+              >Select All</label
+            >
+          </div>
+          <button>
+            <i
+              class="bx bxs-trash-alt bx-sm"
+              [ngClass]="true ? 'text-gray-500' : ''"
+            ></i>
+          </button>
+        </div>
         <ng-container *ngIf="draftPosts">
-          <div *ngFor="let draft of draftPosts">
-            <app-draft-card [draftPost]="draft"></app-draft-card>
+          <div
+            *ngFor="let draft of draftPosts"
+            class="w-full flex flex-row gap-1 px-4 rounded bg-white shadow"
+          >
+            <input type="checkbox" />
+            <div class="w-full">
+              <app-draft-card [draftPost]="draft"></app-draft-card>
+            </div>
           </div>
         </ng-container>
       </div>

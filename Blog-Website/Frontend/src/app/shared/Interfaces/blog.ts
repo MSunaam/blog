@@ -16,20 +16,3 @@ export interface BlogPost {
   views: number;
   isDraft: boolean;
 }
-export const emptyPost = (author: User): BlogPost => {
-  return {
-    _id: '',
-    title: '',
-    content: '',
-    author: author,
-    publishDate: new Date().toString(),
-    lastUpdated: new Date(),
-    category: BlogCategory.ART_CREATIVITY,
-    likes: 0,
-    comments: [],
-    summary: '',
-    leadImage: '',
-    views: 0,
-    isDraft: true,
-  };
-};

@@ -1,10 +1,12 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged } from 'rxjs';
-import { BlogPost, emptyPost } from 'src/app/shared/Interfaces/blog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { BlogPost } from 'src/app/shared/Interfaces/blog';
+import { DraftPost, newDraftPost } from 'src/app/shared/Interfaces/draftPost';
 import { User } from 'src/app/shared/Interfaces/user';
+import { LoaderService } from 'src/app/shared/Services/loader.service';
 import { PostService } from 'src/app/shared/Services/post.service';
 import { UserService } from 'src/app/shared/Services/user.service';
 
@@ -13,32 +15,55 @@ import { UserService } from 'src/app/shared/Services/user.service';
   templateUrl: './write-blog.component.html',
   styleUrls: ['./write-blog.component.scss'],
 })
-export class WriteBlogComponent implements OnInit {
+export class WriteBlogComponent implements OnInit, OnDestroy {
   constructor(
     private _titleService: Title,
     private _userService: UserService,
     private _postService: PostService,
-    private _router: Router
+    private _route: ActivatedRoute,
+    private _loaderService: LoaderService
   ) {}
 
-  isDraftPostEmpty() {
-    return this.newBlog === emptyPost(this.currentUser);
+  draftId!: string;
+
+  loggedInUserSubscription!: Subscription;
+  saveDraftSubscription!: Subscription;
+  titleChangeSubscription!: Subscription;
+  summaryChangeSubscription!: Subscription;
+  contentChangeSubscription!: Subscription;
+
+  leadImageControl = new FormControl();
+
+  newBlogPostForm = new FormGroup({
+    titleInputControl: new FormControl(),
+    summaryInputControl: new FormControl(),
+    blogContentControl: new FormControl(),
+  });
+
+  newDraft!: DraftPost;
+  currentUser!: User;
+
+  saveChangesLoader: boolean = false;
+  isCancelPostModalOpen: boolean = false;
+  isLeadImageModalOpen: boolean = false;
+
+  removeLeadImage() {
+    this.newDraft.leadImage = '';
+    this.leadImageControl.setValue('');
+    this.saveDraftPost();
   }
 
   createNewDarft() {
-    console.log(this.newBlog);
+    console.log(this.newDraft);
 
-    this._postService.saveDraftPost(this.newBlog).subscribe({
-      next: (res) => {
-        this.newBlog = emptyPost(this.currentUser);
-      },
-      error: console.error,
-    });
+    if (!this.checkIfNewDraftEmpty()) {
+      console.log('not empty');
+
+      this.saveDraftPost();
+    }
+    this.newDraft = newDraftPost(this.currentUser);
+    this.newBlogPostForm.reset({}, { emitEvent: false });
   }
-
-  saveChangesLoader: boolean = false;
-
-  isLeadImageModalOpen: boolean = false;
 
   openLeadImageModal() {
     this.isLeadImageModalOpen = true;
@@ -58,36 +83,24 @@ export class WriteBlogComponent implements OnInit {
     },
   };
 
-  leadImageControl = new FormControl();
-
-  newBlogPostForm = new FormGroup({
-    titleInput: new FormControl(),
-    summaryInput: new FormControl(),
-    blogContentControl: new FormControl(),
-  });
-
-  newBlog!: BlogPost;
-  currentUser!: User;
-
-  get titleInput() {
-    return this.newBlogPostForm.get('titleInput');
+  get titleInputControl() {
+    return this.newBlogPostForm.get('titleInputControl');
   }
 
-  get summaryInput() {
-    return this.newBlogPostForm.get('summaryInput');
+  get summaryInputControl() {
+    return this.newBlogPostForm.get('summaryInputControl');
   }
 
   get blogContentControl() {
     return this.newBlogPostForm.get('blogContentControl');
   }
 
-  isCancelPostModalOpen: boolean = false;
-
   saveDraftPost() {
+    if (this.checkIfNewDraftEmpty()) return;
     this.saveChangesLoader = true;
-    this._postService.saveDraftPost(this.newBlog).subscribe({
+    this._postService.saveDraftPost(this.newDraft).subscribe({
       next: (post) => {
-        // console.log(post);
+        console.log(post);
         setTimeout(() => {
           this.saveChangesLoader = false;
         }, 1000);
@@ -106,73 +119,124 @@ export class WriteBlogComponent implements OnInit {
 
   previewBlogPost() {
     // return;
+    // this._postService.setPreviewPost(this.newBlog);
+    // this._router.navigate(['/post'], {
+    //   queryParams: { preview: true, id: this.newBlog._id },
+    //   queryParamsHandling: 'merge',
+    // });
+  }
 
-    this._postService.setPreviewPost(this.newBlog);
-    this._router.navigate(['/post'], {
-      queryParams: { preview: true, id: this.newBlog._id },
-      queryParamsHandling: 'merge',
+  getLoggedInUser() {
+    this.loggedInUserSubscription = this._userService.user$.subscribe({
+      next: (user) => {
+        this.currentUser = user;
+      },
     });
   }
 
-  ngOnInit(): void {
-    this.newBlogPostForm.valueChanges
+  checkIfNewDraftEmpty() {
+    return (
+      this.newDraft.title.trim() === '' &&
+      (this.newDraft.content === null || this.newDraft.content.trim() == '') &&
+      this.newDraft.summary.trim() === ''
+    );
+  }
+
+  saveOnFormChange() {
+    this.saveDraftSubscription = this.newBlogPostForm.valueChanges
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe((value) => {
-        this._postService.saveDraftPost(this.newBlog).subscribe({
-          next: (post) => {
-            // console.log(post);
-          },
-          error: console.error,
-        });
+        if (this.checkIfNewDraftEmpty()) {
+          // console.log('empty');
+
+          return;
+        }
+        // console.log('not empty');
+        // console.log(this.newDraft);
+
+        this.saveDraftPost();
       });
+  }
 
-    this.newBlog = emptyPost(this.currentUser);
-    this.newBlog.publishDate = new Date().toISOString();
+  titleUpdateSubscription() {
+    this._titleService.setTitle('New Blog');
+    this.titleChangeSubscription = this.titleInputControl!.valueChanges.pipe(
+      distinctUntilChanged(),
+      debounceTime(1000)
+    ).subscribe((value) => {
+      // console.log(value);
 
-    this._userService.user$.subscribe({
-      next: (user) => {
-        this.currentUser = user;
-        // this.newBlog = emptyPost(user);
-      },
+      this._titleService.setTitle(`${value} - New Blog`);
+      this.newDraft.title = value;
     });
+  }
 
-    this._postService.getLatestDraftPost(this.currentUser._id).subscribe({
-      next: (post: BlogPost | null) => {
-        // console.log(post);
-
-        if (!post) return;
-
-        this.newBlog = post;
-        this.newBlogPostForm.patchValue(
-          {
-            titleInput: this.newBlog.title,
-            summaryInput: this.newBlog.summary,
-            blogContentControl: this.newBlog.content,
-          },
-          { emitEvent: false }
-        );
-      },
-    });
-
-    this._titleService.setTitle('Write Blog');
-    this.titleInput!.valueChanges.pipe(distinctUntilChanged()).subscribe(
-      (value) => {
+  controlUpdateSubscription() {
+    this.summaryChangeSubscription =
+      this.summaryInputControl!.valueChanges.pipe(
+        distinctUntilChanged()
+      ).subscribe((value) => {
         // console.log(value);
 
-        this._titleService.setTitle(value);
-        this.newBlog.title = value;
-      }
-    );
-    this.summaryInput!.valueChanges.pipe(distinctUntilChanged()).subscribe(
-      (value) => {
-        this.newBlog.summary = value;
+        this.newDraft.summary = value;
         // console.log(value);
-      }
-    );
-    this.blogContentControl!.valueChanges.pipe(
+      });
+    this.contentChangeSubscription = this.blogContentControl!.valueChanges.pipe(
       distinctUntilChanged()
     ).subscribe((value) => {
-      this.newBlog.content = value;
+      // console.log(value);
+
+      this.newDraft.content = value;
     });
+  }
+
+  getRouteData() {
+    this._loaderService.showLoader();
+    this.draftId = this._route.snapshot.queryParams['id'];
+    if (!this.draftId) {
+      this._loaderService.hideLoader();
+      return;
+    } else {
+      // console.log(this.draftId);
+
+      this._postService.getDraftById(this.draftId).subscribe({
+        next: (draft: DraftPost) => {
+          this.newDraft = draft;
+          this.newBlogPostForm.patchValue({
+            titleInputControl: draft.title,
+            summaryInputControl: draft.summary,
+            blogContentControl: draft.content,
+          });
+          this.leadImageControl.setValue(draft.leadImage);
+          this._loaderService.hideLoader();
+        },
+        error: console.error,
+      });
+    }
+  }
+
+  ngOnInit(): void {
+    this._loaderService.showLoader();
+    this.getLoggedInUser();
+
+    this.newDraft = newDraftPost(this.currentUser);
+
+    this.newDraft.lastUpdated = new Date().toISOString();
+    // console.log(this.newDraft);
+
+    this.saveOnFormChange();
+
+    this.titleUpdateSubscription();
+    this.controlUpdateSubscription();
+    this.getRouteData();
+    this._loaderService.hideLoader();
+  }
+
+  ngOnDestroy(): void {
+    this.loggedInUserSubscription.unsubscribe();
+    this.saveDraftSubscription.unsubscribe();
+    this.titleChangeSubscription.unsubscribe();
+    this.contentChangeSubscription.unsubscribe();
+    this.summaryChangeSubscription.unsubscribe();
   }
 }

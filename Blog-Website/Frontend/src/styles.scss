@@ -423,11 +423,11 @@ body.modal-open{
 }
 
 .btn-disabled{
-    color: white;
-    background: gray;
-
+    color: white !important;
+    background: gray !important;
+    border: none !important;
     &:hover {
-        filter: brightness($lightenColor);
+        filter: brightness($lightenColor) !important;
         cursor:not-allowed;
     }
 }
