@@ -15,6 +15,27 @@ export class DraftPostService {
     @InjectModel(User.name) private _userModel: Model<User>,
   ) {}
 
+  async findAuthor(userID: string) {
+    const user = await this._userModel.findById(userID);
+    if (!user) throw new NotFoundException('User not found');
+    return user;
+  }
+
+  deleteMany(ids: string[]) {
+    // log(ids);
+    return this._draftPostModel.deleteMany({ _id: { $in: ids } });
+  }
+
+  async uploadImage(draftId: string, filename: string) {
+    const draft = await this._draftPostModel.findById(draftId);
+    if (!draft) throw new NotFoundException('Draft post not found');
+    // log(filename);
+    // filename = filename.replace(/[^A-Z0-9]+/gi, '');
+    // log(filename);
+    draft.leadImage = `http://localhost:3000/leadImages/${filename}`;
+    return await draft.save();
+  }
+
   async findByAuthor(userID: string) {
     const user = await this._userModel
       .findById(userID)
@@ -30,7 +51,11 @@ export class DraftPostService {
   }
 
   async getLatestDraftPost(userID: string) {
-    const draftPosts = await this._draftPostModel.find({ author: userID });
+    const draftPosts = await this._draftPostModel.find(
+      { author: userID },
+      {},
+      { sort: { lastUpdated: -1 } },
+    );
     // log(draftPosts);
     if (draftPosts.length === 0) return null;
     return draftPosts[0];
@@ -69,7 +94,14 @@ export class DraftPostService {
     return await draftPost.updateOne(updateDraftPostDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} draftPost`;
+  async remove(id: string) {
+    const draft = await this._draftPostModel.findOne({ _id: id });
+    // log(draft);
+    if (!draft) throw new NotFoundException('Draft post not found');
+    const user = await this._userModel.findOne({ _id: draft.author });
+    if (!user) throw new NotFoundException('User not found');
+    await user.updateOne({ $pull: { draftPosts: draft._id } });
+    await user.save();
+    return await draft.deleteOne();
   }
 }

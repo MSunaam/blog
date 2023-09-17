@@ -1,4 +1,10 @@
-<app-loader></app-loader>
+<app-delete-modal
+  *ngIf="showDeleteModal"
+  [multipleDrafts]="this.selectedDrafts.size > 1"
+  (closeDeleteModal)="closeDeleteModal($event)"
+  (refreshDrafts)="refreshDrafts($event)"
+  [selectedDrafts]="selectedDrafts"
+></app-delete-modal>
 
 <div class="w-full h-full bg-white">
   <div class="h-20">
@@ -20,6 +26,7 @@
               name="selectAll"
               id="selectAll"
               #selectAllInput
+              (change)="addAllToSet($event)"
             />
             <label
               for="selectAll"
@@ -27,10 +34,12 @@
               >Select All</label
             >
           </div>
-          <button>
+          <button [disabled]="!checkIfAnySelected()" (click)="deleteDrafts()">
             <i
               class="bx bxs-trash-alt bx-sm"
-              [ngClass]="true ? 'text-gray-500' : ''"
+              [ngClass]="
+                checkIfAnySelected() ? '' : 'text-gray-500 pointer-events-none'
+              "
             ></i>
           </button>
         </div>
@@ -39,7 +48,12 @@
             *ngFor="let draft of draftPosts"
             class="w-full flex flex-row gap-1 px-4 rounded bg-white shadow"
           >
-            <input type="checkbox" />
+            <input
+              type="checkbox"
+              name="draftSelector"
+              #checkBox
+              (change)="addToSet($event, draft)"
+            />
             <div class="w-full">
               <app-draft-card [draftPost]="draft"></app-draft-card>
             </div>

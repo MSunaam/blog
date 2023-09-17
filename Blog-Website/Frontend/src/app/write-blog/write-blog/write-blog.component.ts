@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
+import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BlogPost } from 'src/app/shared/Interfaces/blog';
@@ -21,7 +21,9 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     private _userService: UserService,
     private _postService: PostService,
     private _route: ActivatedRoute,
-    private _loaderService: LoaderService
+    private _loaderService: LoaderService,
+    private _sanitizer: DomSanitizer,
+    private _router: Router
   ) {}
 
   draftId!: string;
@@ -47,6 +49,10 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   isCancelPostModalOpen: boolean = false;
   isLeadImageModalOpen: boolean = false;
 
+  sanitizeUrls(url: string) {
+    return this._sanitizer.bypassSecurityTrustUrl(url);
+  }
+
   removeLeadImage() {
     this.newDraft.leadImage = '';
     this.leadImageControl.setValue('');
@@ -71,6 +77,7 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
 
   closeLeadImageModal(event: boolean) {
     this.isLeadImageModalOpen = false;
+    this.getRouteData();
   }
 
   editorConfig = {
@@ -124,6 +131,9 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     //   queryParams: { preview: true, id: this.newBlog._id },
     //   queryParamsHandling: 'merge',
     // });
+    this._router.navigate(['/preview'], {
+      queryParams: { id: this.newDraft._id },
+    });
   }
 
   getLoggedInUser() {
@@ -202,17 +212,30 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
       this._postService.getDraftById(this.draftId).subscribe({
         next: (draft: DraftPost) => {
           this.newDraft = draft;
-          this.newBlogPostForm.patchValue({
-            titleInputControl: draft.title,
-            summaryInputControl: draft.summary,
-            blogContentControl: draft.content,
-          });
+          this.newBlogPostForm.patchValue(
+            {
+              titleInputControl: draft.title,
+              summaryInputControl: draft.summary,
+              blogContentControl: draft.content,
+            },
+            { emitEvent: false }
+          );
           this.leadImageControl.setValue(draft.leadImage);
           this._loaderService.hideLoader();
         },
         error: console.error,
       });
     }
+  }
+
+  getLatestDraft() {
+    this._postService.getLatestDraft(this.currentUser._id).subscribe({
+      next: (draft) => {
+        // console.log(draft);
+        this.newDraft = draft;
+      },
+      error: console.error,
+    });
   }
 
   ngOnInit(): void {

@@ -15,6 +15,19 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  uploadLeadImage(file: File, draftId: string) {
+    // console.log(file);
+
+    const formData = new FormData();
+    formData.append('draftId', draftId);
+    formData.append('image', file);
+
+    return this._httpClient.post<DraftPost>(
+      `http://localhost:3000/draft-post/lead-image`,
+      formData
+    );
+  }
+
   getDraftById(id: string) {
     return this._httpClient.get<DraftPost>(
       `http://localhost:3000/draft-post/${id}`
@@ -78,6 +91,29 @@ export class PostService {
         userId: userId,
         blogId: blogId,
       }
+    );
+  }
+
+  getLatestDraft(userId: string) {
+    return this._httpClient.get<DraftPost>(
+      `http://localhost:3000/draft-post/latest`,
+      {
+        params: { userID: userId },
+      }
+    );
+  }
+
+  deleteManyDrafts(set: Set<DraftPost>) {
+    const arr = Array.from(set).map((draft) => draft._id);
+    return this._httpClient.delete(
+      'http://localhost:3000/draft-post/delete-many',
+      { body: { ids: arr } }
+    );
+  }
+
+  getDraftAuthor(authorId: string) {
+    return this._httpClient.get<User>(
+      `http://localhost:3000/draft-post/author/${authorId}`
     );
   }
 }

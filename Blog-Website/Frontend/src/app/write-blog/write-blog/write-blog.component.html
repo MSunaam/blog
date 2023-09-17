@@ -2,7 +2,7 @@
 
 <app-save-lead-image
   *ngIf="isLeadImageModalOpen"
-  [leadImageUrl]="newDraft.leadImage"
+  [draftPost]="newDraft"
   (isModalClosed)="closeLeadImageModal($event)"
 ></app-save-lead-image>
 
@@ -61,7 +61,7 @@
           </button>
           <img
             *ngIf="newDraft.leadImage"
-            [src]="newDraft.leadImage"
+            [src]="sanitizeUrls(newDraft.leadImage)"
             alt=""
             class="object-cover rounded shadow"
           />
@@ -76,7 +76,12 @@
         </div>
       </div>
       <div class="w-full flex flex-row justify-end gap-2">
-        <button class="btn btn-success-outline" (click)="previewBlogPost()">
+        <button
+          class="btn btn-success-outline"
+          (click)="previewBlogPost()"
+          [disabled]="checkIfNewDraftEmpty()"
+          [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
+        >
           Preview
         </button>
         <button

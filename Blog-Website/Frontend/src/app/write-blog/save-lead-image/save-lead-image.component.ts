@@ -8,6 +8,9 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { DraftPost } from 'src/app/shared/Interfaces/draftPost';
+import { PostService } from 'src/app/shared/Services/post.service';
 
 @Component({
   selector: 'app-save-lead-image',
@@ -15,16 +18,30 @@ import {
   styleUrls: ['./save-lead-image.component.scss'],
 })
 export class SaveLeadImageComponent implements OnInit, OnDestroy {
-  constructor() {}
+  constructor(
+    private _sanitizer: DomSanitizer,
+    private _postService: PostService
+  ) {}
 
   leadImage!: File;
   leadImageFile!: string;
+  isFileSelected: boolean = false;
+
+  showRemoveImageModal: boolean = false;
+
+  openRemoveImageModal() {
+    this.showRemoveImageModal = true;
+  }
 
   @ViewChild('modalContent') modalContent!: ElementRef;
 
-  @Input() leadImageUrl!: string;
+  @Input() draftPost!: DraftPost;
 
   @Output() isModalClosed = new EventEmitter<boolean>();
+
+  sanitizeUrls(url: string) {
+    return this._sanitizer.bypassSecurityTrustUrl(url);
+  }
 
   onFileChangeEvent(event: any) {
     const file = event.target.files[0];
@@ -32,9 +49,23 @@ export class SaveLeadImageComponent implements OnInit, OnDestroy {
     const reader = new FileReader();
     reader.onload = (e) => {
       this.leadImageFile = reader.result as string;
-      // console.log(this.profileImage);
+      this.isFileSelected = true;
     };
     reader.readAsDataURL(file);
+  }
+
+  uploadFile() {
+    this._postService
+      .uploadLeadImage(this.leadImage, this.draftPost._id!)
+      .subscribe({
+        next: (draftPost: DraftPost) => {
+          // console.log(draftPost);
+          this.isModalClosed.emit(true);
+        },
+        error: (err) => {
+          console.log(err);
+        },
+      });
   }
 
   closeModal(event: MouseEvent) {

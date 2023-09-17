@@ -12,21 +12,52 @@
       >Close</span
     >
     <h1 class="h2">Upload Lead Image</h1>
-    <div class="w-1/2 overflow-hidden rounded">
-      <img [src]="leadImageUrl" alt="" />
+    <div
+      class="w-1/2 overflow-hidden rounded flex items-center justify-center"
+      *ngIf="draftPost.leadImage || leadImageFile; else noImageTemplate"
+    >
+      <img
+        [src]="sanitizeUrls(draftPost.leadImage)"
+        *ngIf="!leadImageFile"
+        alt=""
+        class="w-1/2 object-cover rounded"
+      />
+      <img
+        [src]="leadImageFile"
+        alt=""
+        class="w-1/2 object-cover rounded"
+        *ngIf="leadImageFile"
+      />
     </div>
-    <input type="file" class="hidden" #imageInput />
+    <input
+      type="file"
+      class="hidden"
+      #imageInput
+      (change)="onFileChangeEvent($event)"
+    />
     <div class="flex flex-row gap-2">
       <button class="btn btn-primary" (click)="imageInput.click()">
         Upload
       </button>
       <button
+        class="btn btn-success"
+        (click)="uploadFile()"
+        [disabled]="!isFileSelected"
+        [ngClass]="isFileSelected ? '' : 'btn-disabled'"
+      >
+        Save
+      </button>
+      <button
         class="btn btn-secondary"
-        [disabled]="!leadImageUrl"
-        [ngClass]="leadImageUrl ? '' : 'btn-disabled'"
+        [disabled]="!draftPost.leadImage"
+        [ngClass]="draftPost.leadImage ? '' : 'btn-disabled'"
       >
         Remove
       </button>
     </div>
   </div>
 </div>
+
+<ng-template #noImageTemplate>
+  <span class="text-xl font-medium">No file selected</span>
+</ng-template>
