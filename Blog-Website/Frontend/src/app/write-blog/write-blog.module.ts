@@ -10,7 +10,11 @@ import { SaveLoaderComponent } from './save-loader/save-loader.component';
 import { SaveLeadImageComponent } from './save-lead-image/save-lead-image.component';
 
 @NgModule({
-  declarations: [WriteBlogComponent, SaveLoaderComponent, SaveLeadImageComponent],
+  declarations: [
+    WriteBlogComponent,
+    SaveLoaderComponent,
+    SaveLeadImageComponent,
+  ],
   imports: [
     CommonModule,
     WriteBlogRoutingModule,

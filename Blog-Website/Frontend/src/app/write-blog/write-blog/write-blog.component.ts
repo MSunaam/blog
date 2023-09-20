@@ -24,7 +24,9 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     private _loaderService: LoaderService,
     private _sanitizer: DomSanitizer,
     private _router: Router
-  ) {}
+  ) {
+    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   draftId!: string;
 
@@ -49,6 +51,18 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   isCancelPostModalOpen: boolean = false;
   isLeadImageModalOpen: boolean = false;
 
+  publishPost() {
+    if (this.newDraft._id) {
+      this._postService.publishDraft(this.newDraft._id!).subscribe({
+        next: (post) => {
+          // console.log(post);
+          this._router.navigate(['/post'], { queryParams: { id: post._id } });
+        },
+        error: console.error,
+      });
+    }
+  }
+
   sanitizeUrls(url: string) {
     return this._sanitizer.bypassSecurityTrustUrl(url);
   }
@@ -60,15 +74,16 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   }
 
   createNewDarft() {
-    console.log(this.newDraft);
+    // console.log(this.newDraft);
 
-    if (!this.checkIfNewDraftEmpty()) {
-      console.log('not empty');
+    // if (!this.checkIfNewDraftEmpty()) {
+    //   console.log('not empty');
 
-      this.saveDraftPost();
-    }
-    this.newDraft = newDraftPost(this.currentUser);
-    this.newBlogPostForm.reset({}, { emitEvent: false });
+    //   this.saveDraftPost();
+    // }
+    // this.newDraft = newDraftPost(this.currentUser);
+    // this.newBlogPostForm.reset({}, { emitEvent: false });
+    this._router.navigate(['/write-blog'], { queryParams: { id: '' } });
   }
 
   openLeadImageModal() {
@@ -107,7 +122,8 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     this.saveChangesLoader = true;
     this._postService.saveDraftPost(this.newDraft).subscribe({
       next: (post) => {
-        console.log(post);
+        this.newDraft = post;
+        this._router.navigate([], { queryParams: { id: post._id } });
         setTimeout(() => {
           this.saveChangesLoader = false;
         }, 1000);

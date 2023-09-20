@@ -116,4 +116,13 @@ export class PostService {
       `http://localhost:3000/draft-post/author/${authorId}`
     );
   }
+
+  publishDraft(draftId: string) {
+    return this._httpClient.post<BlogPost>(
+      'http://localhost:3000/draft-post/publish',
+      {
+        draftId: draftId,
+      }
+    );
+  }
 }

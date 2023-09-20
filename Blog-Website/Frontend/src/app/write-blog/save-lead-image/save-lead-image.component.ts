@@ -79,6 +79,7 @@ export class SaveLeadImageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     document.querySelector('body')?.classList.add('modal-open');
+    console.log(this.draftPost);
   }
 
   ngOnDestroy(): void {

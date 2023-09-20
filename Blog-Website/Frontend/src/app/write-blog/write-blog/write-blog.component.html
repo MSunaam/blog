@@ -33,7 +33,7 @@
             >Show All Drafts</a
           >
           <a
-            class="underline text-[blue] h-min"
+            class="underline text-[blue] h-min cursor-pointer"
             *ngIf="!checkIfNewDraftEmpty()"
             (click)="createNewDarft()"
             >New Post</a
@@ -83,6 +83,14 @@
           [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
         >
           Preview
+        </button>
+        <button
+          class="btn btn-primary-outline"
+          [disabled]="checkIfNewDraftEmpty()"
+          [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
+          (click)="publishPost()"
+        >
+          Publish
         </button>
         <button
           class="btn btn-danger-outline w-36"

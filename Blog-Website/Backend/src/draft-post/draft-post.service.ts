@@ -7,13 +7,46 @@ import { Model } from 'mongoose';
 import { NotFoundError } from 'rxjs';
 import { User } from 'src/user/Schema/user.schema';
 import { log } from 'console';
+import { BlogPost } from 'src/blog-post/Schema/blog-post.schema';
 
 @Injectable()
 export class DraftPostService {
   constructor(
     @InjectModel(DraftPost.name) private _draftPostModel: Model<DraftPost>,
     @InjectModel(User.name) private _userModel: Model<User>,
+    @InjectModel(BlogPost.name) private _blogPostModel: Model<BlogPost>,
   ) {}
+
+  async publishDraftPost(draftId: string) {
+    const draft = await this._draftPostModel.findById(draftId);
+    if (!draft) throw new NotFoundException('Draft post not found');
+    const user = await this._userModel.findById(draft.author);
+    if (!user) throw new NotFoundException('User not found');
+
+    const newBlogPost = new this._blogPostModel({
+      title: draft.title,
+      content: draft.content,
+      author: draft.author,
+      publishDate: new Date(),
+      lastUpdated: draft.lastUpdated,
+      category: draft.category,
+      likes: 0,
+      comments: [],
+      summary: draft.summary,
+      leadImage: draft.leadImage,
+      isDraft: false,
+    });
+
+    // log(newBlogPost);
+
+    await draft.deleteOne();
+    await user.updateOne({ $push: { blogPosts: newBlogPost } });
+
+    await user.updateOne({ $pull: { draftPosts: draft._id } });
+    await user.save();
+
+    return await newBlogPost.save();
+  }
 
   async findAuthor(userID: string) {
     const user = await this._userModel.findById(userID);

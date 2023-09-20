@@ -29,6 +29,11 @@ export class DraftPostController {
     return this.draftPostService.devDeleteAll();
   }
 
+  @Post('publish')
+  publishDraftPost(@Body('draftId') draftId: string) {
+    return this.draftPostService.publishDraftPost(draftId);
+  }
+
   @Get('author/:userID')
   findAuthor(@Param('userID') userID: string) {
     return this.draftPostService.findAuthor(userID);
