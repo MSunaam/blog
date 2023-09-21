@@ -31,6 +31,8 @@ export class BlogPost {
   views: number;
   @Prop({ required: true, default: false })
   isDraft: boolean;
+  @Prop({ required: false, default: [] })
+  tags: string[];
 }
 
 export const BlogPostSchema = SchemaFactory.createForClass(BlogPost);

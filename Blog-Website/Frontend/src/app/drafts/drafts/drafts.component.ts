@@ -27,7 +27,7 @@ export class DraftsComponent implements OnInit {
   ) {}
 
   user!: User;
-  draftPosts!: DraftPost[];
+  draftPosts: DraftPost[] = [];
   selectedDrafts: Set<DraftPost> = new Set<DraftPost>();
 
   showDeleteModal: boolean = false;

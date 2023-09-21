@@ -10,4 +10,5 @@ export class CreateDraftPostDto {
   category: BlogCategory;
   summary: string;
   leadImage: string;
+  tags: string[];
 }

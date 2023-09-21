@@ -15,6 +15,13 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  getPosts(query: string) {
+    return this._httpClient.get<BlogPost[]>(
+      `http://localhost:3000/blog-post/search`,
+      { params: { tags: query } }
+    );
+  }
+
   uploadLeadImage(file: File, draftId: string) {
     // console.log(file);
 

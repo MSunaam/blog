@@ -1,0 +1,41 @@
+<div class="w-full h-full">
+  <div class="h-20">
+    <app-navbar></app-navbar>
+  </div>
+
+  <div class="container mx-auto">
+    <div class="flex flex-col gap-10">
+      <h1 class="h1">Search</h1>
+      <div class="flex flex-row gap-4 items-center">
+        <span class="text-passive italic">Search:</span>
+        <input
+          type="text"
+          class="w-1/4 border border-black rounded focus:outline-none px-2"
+          [formControl]="searchControl"
+          #searchInputControl
+        />
+      </div>
+      <div class="flex flex-col">
+        <ng-container *ngIf="searchResults.length > 0; else noPostsFound">
+          <ng-container *ngFor="let post of searchResults">
+            <app-blog-search [blogPost]="post"></app-blog-search>
+          </ng-container>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
+
+<ng-template #noPostsFound>
+  <div class="flex flex-col gap-4 w-full justify-center items-center">
+    <h1 class="h1" *ngIf="searchInputControl.value !== ''">No posts found</h1>
+    <span class="text-passive italic"
+      >Try searching for something
+      <span *ngIf="searchInputControl.value !== ''" class="text-passive italic"
+        >else</span
+      ></span
+    >
+  </div>
+</ng-template>

@@ -3,6 +3,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { DomSanitizer, Title } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
+import { BlogCategory } from 'src/app/shared/Interfaces/BlogCategory.eum';
 import { BlogPost } from 'src/app/shared/Interfaces/blog';
 import { DraftPost, newDraftPost } from 'src/app/shared/Interfaces/draftPost';
 import { User } from 'src/app/shared/Interfaces/user';
@@ -25,7 +26,34 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     private _sanitizer: DomSanitizer,
     private _router: Router
   ) {
-    this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+    // this._router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
+
+  selectedBlogCategory!: BlogCategory;
+  category: any = BlogCategory;
+
+  tags: string[] = [];
+
+  addTag(tag: string) {
+    if (tag.trim() === '') return;
+    this.tags.push(tag.trim());
+    if (this.tagsInputControl && this.tags.length === 10) {
+      this.tagsInputControl.disable();
+    }
+  }
+
+  removeTag(index: number) {
+    this.tags.splice(index, 1);
+    if (this.tagsInputControl && this.tags.length < 10) {
+      this.tagsInputControl.enable();
+    }
+  }
+
+  selectCategory(category: any) {
+    this.selectedBlogCategory = this.category[category];
+    this.newDraft.category = this.selectedBlogCategory;
+    // console.log(this.selectedBlogCategory);
+    this.newBlogPostForm.get('categoryInputControl')?.setValue(category);
   }
 
   draftId!: string;
@@ -42,7 +70,13 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     titleInputControl: new FormControl(),
     summaryInputControl: new FormControl(),
     blogContentControl: new FormControl(),
+    categoryInputControl: new FormControl(),
+    tagsInputControl: new FormControl(),
   });
+
+  get tagsInputControl() {
+    return this.newBlogPostForm.get('tagsInputControl');
+  }
 
   newDraft!: DraftPost;
   currentUser!: User;
@@ -53,6 +87,7 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
 
   publishPost() {
     if (this.newDraft._id) {
+      this.newDraft.tags = this.tags;
       this._postService.publishDraft(this.newDraft._id!).subscribe({
         next: (post) => {
           // console.log(post);
@@ -87,6 +122,8 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   }
 
   openLeadImageModal() {
+    // console.log("aaa");
+
     this.isLeadImageModalOpen = true;
   }
 
@@ -120,6 +157,7 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   saveDraftPost() {
     if (this.checkIfNewDraftEmpty()) return;
     this.saveChangesLoader = true;
+    this.newDraft.tags = this.tags;
     this._postService.saveDraftPost(this.newDraft).subscribe({
       next: (post) => {
         this.newDraft = post;
@@ -169,9 +207,12 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   }
 
   saveOnFormChange() {
+    this.newDraft.tags = this.tags;
     this.saveDraftSubscription = this.newBlogPostForm.valueChanges
       .pipe(debounceTime(3000), distinctUntilChanged())
       .subscribe((value) => {
+        // console.log(value);
+
         if (this.checkIfNewDraftEmpty()) {
           // console.log('empty');
 
@@ -233,9 +274,15 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
               titleInputControl: draft.title,
               summaryInputControl: draft.summary,
               blogContentControl: draft.content,
+              categoryInputControl: draft.category,
             },
             { emitEvent: false }
           );
+          this.selectedBlogCategory = draft.category;
+          console.log(draft);
+
+          this.tags = draft.tags;
+
           this.leadImageControl.setValue(draft.leadImage);
           this._loaderService.hideLoader();
         },

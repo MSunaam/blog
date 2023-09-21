@@ -43,7 +43,7 @@
             ></i>
           </button>
         </div>
-        <ng-container *ngIf="draftPosts">
+        <ng-container *ngIf="draftPosts.length > 0; else noDrafts">
           <div
             *ngFor="let draft of draftPosts"
             class="w-full flex flex-row gap-1 px-4 rounded bg-white shadow"
@@ -65,3 +65,9 @@
     <app-footer></app-footer>
   </div>
 </div>
+
+<ng-template #noDrafts>
+  <div class="w-full flex flex-col items-center justify-center">
+    <h1 class="text-3xl">No Drafts Found</h1>
+  </div>
+</ng-template>

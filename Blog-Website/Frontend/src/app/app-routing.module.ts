@@ -7,6 +7,7 @@ import { PostModule } from './post/post.module';
 import { WriteBlogModule } from './write-blog/write-blog.module';
 import { DraftsModule } from './drafts/drafts.module';
 import { PreviewPostModule } from './preview-post/preview-post.module';
+import { SearchModule } from './search/search.module';
 
 const routes: Routes = [
   { path: '', loadChildren: () => PagesModule },
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: 'write-blog', loadChildren: () => WriteBlogModule },
   { path: 'drafts', loadChildren: () => DraftsModule },
   { path: 'preview', loadChildren: () => PreviewPostModule },
+  { path: 'search', loadChildren: () => SearchModule },
 ];
 
 @NgModule({

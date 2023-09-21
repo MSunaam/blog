@@ -13,4 +13,5 @@ export class CreateBlogPostDto {
   summary: string;
   leadImage: string;
   isDraft: boolean;
+  tags: string[];
 }

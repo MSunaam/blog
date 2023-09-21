@@ -6,6 +6,7 @@ import { Model } from 'mongoose';
 import { BlogPost, BlogPostDocument } from './Schema/blog-post.schema';
 import { User, UserDocument } from 'src/user/Schema/user.schema';
 import * as bcrypt from 'bcrypt';
+import { log } from 'console';
 
 @Injectable()
 export class BlogPostService {
@@ -13,6 +14,16 @@ export class BlogPostService {
     @InjectModel(BlogPost.name) private _blogPostModel: Model<BlogPostDocument>,
     @InjectModel(User.name) private _userModel: Model<UserDocument>,
   ) {}
+
+  search(query: string) {
+    const queryArray = query.split(' ');
+    // log(queryArray);
+    return this._blogPostModel
+      .find({ tags: { $in: queryArray } })
+      .sort({ lastUpdated: -1 })
+      .populate('author')
+      .exec();
+  }
 
   async saveDraft(createBlogPostDto: CreateBlogPostDto) {
     const user = await this._userModel.findOne({

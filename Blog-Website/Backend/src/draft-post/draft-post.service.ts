@@ -35,6 +35,7 @@ export class DraftPostService {
       summary: draft.summary,
       leadImage: draft.leadImage,
       isDraft: false,
+      tags: draft.tags,
     });
 
     // log(newBlogPost);
@@ -95,6 +96,7 @@ export class DraftPostService {
   }
 
   async create(createDraftPostDto: CreateDraftPostDto) {
+    // log(createDraftPostDto);
     if (!createDraftPostDto._id) {
       var newDraftPost = new this._draftPostModel(createDraftPostDto);
       const user = await this._userModel.findById(createDraftPostDto.author);

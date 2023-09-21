@@ -15,6 +15,7 @@ import { RefreshInterceptor } from './shared/Interceptors/refresh.interceptor';
 import { SwiperModule } from 'swiper/angular';
 import { UserService } from './shared/Services/user.service';
 import { PostService } from './shared/Services/post.service';
+import { LoaderService } from './shared/Services/loader.service';
 
 export function tokenGetter() {
   return localStorage.getItem('access_token');
@@ -40,6 +41,7 @@ export function tokenGetter() {
     { provide: HTTP_INTERCEPTORS, useClass: RefreshInterceptor, multi: true },
     UserService,
     PostService,
+    LoaderService,
   ],
   bootstrap: [AppComponent],
 })

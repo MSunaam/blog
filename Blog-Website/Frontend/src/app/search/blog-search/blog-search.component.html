@@ -1,0 +1,21 @@
+<div
+  class="flex gap-4 flex-row h-44 items-center justify-start w-full cursor-pointer px-4 white rounded shadow-xl bg-white"
+  *ngIf="blogPost"
+  (click)="openDraft()"
+>
+  <img
+    *ngIf="blogPost.leadImage"
+    [src]="blogPost.leadImage"
+    alt="LeadImg"
+    class="w-40 h-40 object-cover rounded m-2"
+  />
+  <div class="flex flex-row w-full justify-between items-center">
+    <div class="flex justify-start flex-col gap-1">
+      <h3 class="h3">{{ blogPost.title || "No title" }}</h3>
+      <span class="text-passive">{{ blogPost.summary || "No Summary" }}</span>
+    </div>
+    <div class="">
+      {{ blogPost.lastUpdated | date }}
+    </div>
+  </div>
+</div>

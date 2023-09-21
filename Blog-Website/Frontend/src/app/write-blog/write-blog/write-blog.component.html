@@ -56,7 +56,11 @@
           ></quill-editor>
         </div>
         <div class="px-5 w-[calc(20%)] flex flex-col gap-5">
-          <button class="btn btn-primary" (click)="openLeadImageModal()">
+          <button
+            class="btn btn-primary"
+            (click)="openLeadImageModal()"
+            type="button"
+          >
             Add Lead Image
           </button>
           <img
@@ -66,6 +70,7 @@
             class="object-cover rounded shadow"
           />
           <button
+            type="button"
             class="btn btn-secondary"
             [disabled]="!newDraft.leadImage"
             [ngClass]="newDraft.leadImage ? '' : 'btn-disabled'"
@@ -75,8 +80,87 @@
           </button>
         </div>
       </div>
+      <div class="flex flex-row w-full justify-start gap-20 items-start">
+        <div class="flex flex-row gap-2 items-center justify-start">
+          <span class="peer">Category:</span>
+          <div class="relative peer">
+            <div
+              class="w-64 border peer border-black px-2 py-1 rounded flex items-center justify-between"
+            >
+              {{ selectedBlogCategory || "Not Selected" }}
+              <i class="bx bxs-chevron-down pb-1"></i>
+            </div>
+            <div
+              class="absolute hidden peer-hover:block hover:block top-8 left-0 rounded bg-white z-50 w-full shadow"
+            >
+              <input
+                type="text"
+                class="hidden"
+                formControlName="categoryInputControl"
+              />
+              <ul class="overflow-y-auto h-60">
+                <li
+                  *ngFor="let cat of category | keyvalue"
+                  class="px-2 py-1 hover:bg-slate-200"
+                  (click)="selectCategory(cat.key)"
+                >
+                  {{ cat.value }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div
+          class="border border-black rounded w-full py-2 px-4 flex flex-col gap-2"
+        >
+          <div class="flex flex-row w-full gap-4 items-center">
+            <span class="text-xl font-medium">Tags</span>
+            <input
+              name="Tags"
+              id="Tags"
+              class="bg-transparent focus:outline-none border rounded px-2"
+              formControlName="tagsInputControl"
+              (keydown.enter)="addTag(tagInput.value); tagInput.value = ''"
+              #tagInput
+              [ngClass]="tags.length > 10 ? 'border-red' : ''"
+            />
+            <button
+              type="button"
+              (click)="addTag(tagInput.value); tagInput.value = ''"
+            >
+              Add
+            </button>
+          </div>
+          <div class="w-full h-full">
+            <ul class="flex gap-2 flex-wrap">
+              <li
+                *ngFor="let tag of tags; index as i"
+                class="bg-purple px-4 w-fit rounded-2xl flex items-center gap-2 text-white"
+              >
+                <span class="text-white">{{ tag }}</span>
+                <i
+                  class="bx bx-x text-white cursor-pointer"
+                  (click)="removeTag(i)"
+                ></i>
+              </li>
+            </ul>
+          </div>
+          <span
+            class="text-sm italic"
+            [ngClass]="
+              tags.length > 10
+                ? 'text-[red]'
+                : tags.length === 10
+                ? 'text-[green]'
+                : ''
+            "
+            >{{ tags.length }}/10</span
+          >
+        </div>
+      </div>
       <div class="w-full flex flex-row justify-end gap-2">
         <button
+          type="button"
           class="btn btn-success-outline"
           (click)="previewBlogPost()"
           [disabled]="checkIfNewDraftEmpty()"
@@ -85,6 +169,7 @@
           Preview
         </button>
         <button
+          type="button"
           class="btn btn-primary-outline"
           [disabled]="checkIfNewDraftEmpty()"
           [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
@@ -93,6 +178,7 @@
           Publish
         </button>
         <button
+          type="button"
           class="btn btn-danger-outline w-36"
           *ngIf="!saveChangesLoader; else saveLoader"
           (click)="saveDraftPost()"
@@ -107,6 +193,7 @@
           </button>
         </ng-template>
         <button
+          type="button"
           (click)="openCancelPostModal()"
           class="btn btn-secondary-outline"
         >

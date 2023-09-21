@@ -21,6 +21,8 @@ export class DraftPost {
   summary: string;
   @Prop({ required: false, default: 'Images/shoot.jpg' })
   leadImage: string;
+  @Prop({ required: false, default: [] })
+  tags: string[];
 }
 
 export const DraftPostSchema = SchemaFactory.createForClass(DraftPost);

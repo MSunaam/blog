@@ -15,4 +15,5 @@ export interface BlogPost {
   leadImage: string;
   views: number;
   isDraft: boolean;
+  tags: string[];
 }

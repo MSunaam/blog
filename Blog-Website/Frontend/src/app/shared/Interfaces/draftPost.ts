@@ -10,6 +10,7 @@ export interface DraftPost {
   category: BlogCategory;
   summary: string;
   leadImage: string;
+  tags: string[];
 }
 
 export const newDraftPost = (user: User): DraftPost => {
@@ -21,5 +22,6 @@ export const newDraftPost = (user: User): DraftPost => {
     category: BlogCategory.TECHNOLOGY,
     summary: '',
     leadImage: '',
+    tags: [],
   };
 };
