@@ -1,17 +1,40 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, from, lastValueFrom } from 'rxjs';
 import { SignInRes } from '../shared/Interfaces/signInRes.interface';
 import { User } from '../shared/Interfaces/user';
+import { UserService } from '../shared/Services/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
-  constructor(private _router: Router, private _httpClient: HttpClient) {}
+  constructor(
+    private _router: Router,
+    private _httpClient: HttpClient,
+    private _zone: NgZone,
+    private _userService: UserService
+  ) {}
 
   baseUrl: string = 'http://localhost:3000/auth';
+
+  signInWithGoogle(res: any) {
+    this._httpClient
+      .post<SignInRes>(`${this.baseUrl}/google-signin`, { token: res })
+      .subscribe({
+        next: (res: SignInRes) => {
+          // console.log(res);
+          this.storeUserAndToken(res);
+          this._userService.setUser(res.user);
+          this._zone.run(() =>
+            this._router.navigate(['/home']).then(() => {
+              window.location.reload();
+            })
+          );
+        },
+      });
+  }
 
   signin(email: string, password: string): Observable<SignInRes> {
     return this._httpClient.post(`${this.baseUrl}/signin`, {
@@ -44,6 +67,8 @@ export class AuthenticationService {
     return false;
   }
   async logout() {
+    // @ts-ignore
+    google.accounts.id.disableAutoSelect();
     if (!this.isLoggedIn()) {
       this._router.navigate(['/auth']);
       localStorage.clear();

@@ -35,7 +35,7 @@ export class DraftPostService {
       summary: draft.summary,
       leadImage: draft.leadImage,
       isDraft: false,
-      tags: draft.tags,
+      tags: draft.tags.map((tag) => tag.toLowerCase()),
     });
 
     // log(newBlogPost);
@@ -97,6 +97,9 @@ export class DraftPostService {
 
   async create(createDraftPostDto: CreateDraftPostDto) {
     // log(createDraftPostDto);
+    createDraftPostDto.tags = createDraftPostDto.tags.map((tag) =>
+      tag.toLowerCase(),
+    );
     if (!createDraftPostDto._id) {
       var newDraftPost = new this._draftPostModel(createDraftPostDto);
       const user = await this._userModel.findById(createDraftPostDto.author);

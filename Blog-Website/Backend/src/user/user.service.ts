@@ -9,9 +9,17 @@ import { UserExistsException } from 'src/Shared/Exceptions/UserExistsException';
 import { BlogPost } from 'src/blog-post/Schema/blog-post.schema';
 import { PublicProfileDto } from './dto/publicProfile.dto';
 import { log } from 'console';
+import { GoogleAuth, OAuth2Client } from 'google-auth-library';
+import { AuthService } from 'src/auth/auth.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
+  constructor(
+    @InjectModel(User.name) private _userModel: Model<User>,
+    @InjectModel(BlogPost.name) private _blogModel: Model<BlogPost>,
+  ) {}
+
   async changePassword(
     oldPassword: string,
     newPassword: string,
@@ -24,10 +32,6 @@ export class UserService {
     user.password = bcrypt.hashSync(newPassword, 10);
     return await user.save();
   }
-  constructor(
-    @InjectModel(User.name) private _userModel: Model<User>,
-    @InjectModel(BlogPost.name) private _blogModel: Model<BlogPost>,
-  ) {}
 
   async likeBlogPost(blogId: string, userId: string) {
     const blogPost = await this._blogModel.findById(blogId);
@@ -99,7 +103,7 @@ export class UserService {
     const currentUser = await this._userModel.findOne({ email: email });
     if (!currentUser) throw new NotFoundException('User not found');
     profileImage = profileImage.replace(/[^A-Z0-9.]+/gi, '_');
-    currentUser.profilePicture = `localhost:3000/profileimages/${profileImage}`;
+    currentUser.profilePicture = `http://localhost:3000/profileimages/${profileImage}`;
     return await currentUser.save();
   }
 

@@ -10,6 +10,8 @@ import { AuthenticationService } from 'src/app/auth/authentication.service';
 import { User } from '../Interfaces/user';
 import { UserService } from '../Services/user.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
+import { query } from '@angular/animations';
 
 @Component({
   selector: 'app-navbar',
@@ -23,8 +25,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
   constructor(
     private _authService: AuthenticationService,
     private _userService: UserService,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private _router: Router
   ) {}
+
+  currentRoute = window.location.pathname;
 
   showUserMenu: boolean = false;
   isLoading: boolean = false;
@@ -72,10 +77,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
     },
   ];
 
+  search(search: string) {
+    this._router.navigate(['/search'], { queryParams: { search: search } });
+  }
+
   ngOnInit(): void {
     this.isLoading = true;
 
     this.isLoggedIn = this._authService.isLoggedIn();
+    // console.log(this.isLoggedIn);
+
     if (this.isLoggedIn) {
       this._userService.user$.subscribe({
         next: (user: User) => {

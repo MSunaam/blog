@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
     private _authService: AuthenticationService
   ) {}
   title = 'blog-website';
+
   ngOnInit(): void {
     if (this._authService.isLoggedIn()) {
       this._userService.setUser(this._authService.getUser());

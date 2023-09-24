@@ -5,6 +5,8 @@ import { Model } from 'mongoose';
 import { User } from 'src/user/Schema/user.schema';
 import * as bcrypt from 'bcrypt';
 import { UserExistsException } from 'src/Shared/Exceptions/UserExistsException';
+import { OAuth2Client } from 'google-auth-library';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +14,51 @@ export class AuthService {
     @InjectModel(User.name) private _userModel: Model<User>,
     private _jwtService: JwtService,
   ) {}
+
+  async googleSignIn(token: string) {
+    const client = new OAuth2Client();
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience:
+        '316939370269-upanebcdsktfe2l8oa522a6ne17nhlpu.apps.googleusercontent.com',
+    });
+    const payload = ticket.getPayload();
+    if (!payload) throw new NotFoundException('User not found');
+    const { email, name, picture } = payload;
+    var user = await this._userModel.findOne({ email: email });
+    if (user) {
+      // log(email, name, picture);
+      user.name = name;
+      user.profilePicture = picture;
+      await user.save();
+    } else {
+      user = new this._userModel({
+        email: email,
+        name: name,
+        profilePicture: picture,
+      });
+      await user.save();
+    }
+
+    const accessPayload = { email: email, sub: user._id };
+    const refreshPayload = { email: email, sub: user._id };
+
+    const accessToken = this._jwtService.sign(accessPayload);
+    const refreshToken = this._jwtService.sign(refreshPayload);
+
+    await this._userModel.updateOne(
+      { id: user.id },
+      { refreshToken: refreshToken },
+    );
+
+    return {
+      access_token: accessToken,
+      accessExpiry: '1d',
+      refresh_token: refreshToken,
+      refreshExpiry: '7d',
+      user: user,
+    };
+  }
 
   async signOut(email: string) {
     const currentUser = await this._userModel.findOne({ email: email });

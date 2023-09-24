@@ -5,6 +5,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { distinctUntilChanged } from 'rxjs';
 import { Router } from '@angular/router';
 import { SignInRes } from 'src/app/shared/Interfaces/signInRes.interface';
+import { CredentialResponse } from 'google-one-tap';
 
 @Component({
   selector: 'app-signup',
@@ -134,8 +135,42 @@ export class SignupComponent implements OnInit {
     }
   }
 
+  handleCredentialResponse = (response: CredentialResponse) => {
+    this._authService.signInWithGoogle(response.credential);
+  };
+
+  googleSignIn() {
+    // @ts-ignore
+    google.accounts.id.initialize({
+      client_id:
+        '316939370269-upanebcdsktfe2l8oa522a6ne17nhlpu.apps.googleusercontent.com',
+      callback: (res: any) => {
+        this.handleCredentialResponse(res);
+      },
+    });
+    // @ts-ignore
+    google.accounts.id.renderButton(
+      document.getElementById('buttonDiv')!,
+      {
+        theme: 'outline',
+        size: 'large',
+        shape: 'pill',
+      } // customization attributes
+    );
+  }
+
   ngOnInit(): void {
     initTE({ Input });
+
+    this.googleSignIn();
+
+    //@ts-ignore
+    window.fbAsyncInit = function () {
+      //@ts-ignore
+      FB.getLoginStatus(function (response: Facebook.StatusResponse) {
+        console.log(response.status);
+      });
+    };
 
     this.nameControl?.valueChanges.pipe(distinctUntilChanged()).subscribe({
       next: (value) => {

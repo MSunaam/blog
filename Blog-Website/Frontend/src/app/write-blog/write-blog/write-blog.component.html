@@ -126,7 +126,9 @@
             />
             <button
               type="button"
-              (click)="addTag(tagInput.value); tagInput.value = ''"
+              (click)="
+                addTag(tagInput.value.toLowerCase()); tagInput.value = ''
+              "
             >
               Add
             </button>

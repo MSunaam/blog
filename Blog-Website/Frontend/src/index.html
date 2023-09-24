@@ -5,6 +5,10 @@
     <title>BlogWebsite</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="google-signin-client_id"
+      content="316939370269-upanebcdsktfe2l8oa522a6ne17nhlpu.apps.googleusercontent.com"
+    />
     <link rel="icon" type="image/x-icon" href="./assets/logo.svg" />
     <link
       href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900&display=swap"
@@ -17,5 +21,41 @@
   </head>
   <body>
     <app-root></app-root>
+
+    <div id="fb-root"></div>
+    <script
+      async
+      defer
+      crossorigin="anonymous"
+      src="https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v18.0&appId=1038479833950926&autoLogAppEvents=1"
+      nonce="VTN9tnRa"
+    ></script>
+
+    <script src="https://accounts.google.com/gsi/client" defer></script>
+
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: "1038479833950926",
+          cookie: true,
+          xfbml: true,
+          version: "v18.0",
+        });
+
+        FB.AppEvents.logPageView();
+      };
+
+      (function (d, s, id) {
+        var js,
+          fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+          return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      })(document, "script", "facebook-jssdk");
+    </script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ActivatedRoute } from '@angular/router';
 import { Subscription, debounceTime, distinctUntilChanged } from 'rxjs';
 import { BlogPost } from 'src/app/shared/Interfaces/blog';
 import { PostService } from 'src/app/shared/Services/post.service';
@@ -13,7 +14,8 @@ import { PostService } from 'src/app/shared/Services/post.service';
 export class SearchPageComponent implements OnInit, OnDestroy {
   constructor(
     private _postService: PostService,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private _route: ActivatedRoute
   ) {}
 
   searchControlChangesSubscription!: Subscription;
@@ -46,14 +48,26 @@ export class SearchPageComponent implements OnInit, OnDestroy {
           if (value) {
             if (value?.trim() !== '') {
               this.getPosts(value);
+              return;
             }
           }
+          this.searchResults = [];
         },
       });
   }
 
+  getRouteParams() {
+    const search = this._route.snapshot.queryParams['search'];
+
+    if (search) {
+      this.searchControl.setValue(search);
+      this.getPosts(search);
+    }
+  }
+
   ngOnInit(): void {
     this.getSearchControlChanges();
+    this.getRouteParams();
   }
   ngOnDestroy(): void {
     // this.searchControlChangesSubscription.unsubscribe();

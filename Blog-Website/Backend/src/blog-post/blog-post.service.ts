@@ -26,6 +26,9 @@ export class BlogPostService {
   }
 
   async saveDraft(createBlogPostDto: CreateBlogPostDto) {
+    createBlogPostDto.tags = createBlogPostDto.tags.map((tag) =>
+      tag.toLowerCase(),
+    );
     const user = await this._userModel.findOne({
       email: createBlogPostDto.author.email,
     });
@@ -44,6 +47,9 @@ export class BlogPostService {
   }
 
   async create(createBlogPostDto: CreateBlogPostDto) {
+    createBlogPostDto.tags = createBlogPostDto.tags.map((tag) =>
+      tag.toLowerCase(),
+    );
     const user = await this._userModel.findById(createBlogPostDto.author);
     if (!user) throw new NotFoundException('User not found');
     const createdBlogPost = new this._blogPostModel(createBlogPostDto);
@@ -61,6 +67,9 @@ export class BlogPostService {
   }
 
   async update(id: string, updateBlogPostDto: UpdateBlogPostDto) {
+    updateBlogPostDto.tags = updateBlogPostDto.tags.map((tag) =>
+      tag.toLowerCase(),
+    );
     updateBlogPostDto.lastUpdated = new Date();
     return await this._blogPostModel
       .findByIdAndUpdate(id, updateBlogPostDto, {

@@ -5,6 +5,8 @@ import { distinctUntilChanged } from 'rxjs';
 import { AuthenticationService } from '../authentication.service';
 import { SignInRes } from 'src/app/shared/Interfaces/signInRes.interface';
 import { UserService } from 'src/app/shared/Services/user.service';
+import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
+import { Facebook } from '../facebook.interface';
 
 @Component({
   selector: 'app-signin',
@@ -108,7 +110,46 @@ export class SigninComponent {
     }
   }
 
+  handleCredentialResponse = (response: CredentialResponse) => {
+    this._authService.signInWithGoogle(response.credential);
+  };
+
+  googleSignIn() {
+    // @ts-ignore
+    google.accounts.id.initialize({
+      client_id:
+        '316939370269-upanebcdsktfe2l8oa522a6ne17nhlpu.apps.googleusercontent.com',
+      callback: (res: any) => {
+        this.handleCredentialResponse(res);
+      },
+    });
+    // @ts-ignore
+    google.accounts.id.renderButton(
+      document.getElementById('buttonDiv')!,
+      {
+        theme: 'outline',
+        size: 'large',
+        shape: 'pill',
+      } // customization attributes
+    );
+    // @ts-ignore
+    // google.accounts.id.prompt();
+  }
+
   ngOnInit(): void {
+    // @ts-ignore
+
+    this.googleSignIn();
+    // this.facebookSignIn();
+
+    //@ts-ignore
+    window.fbAsyncInit = function () {
+      //@ts-ignore
+      FB.getLoginStatus(function (response: Facebook.StatusResponse) {
+        console.log(response.status);
+      });
+    };
+
     this.emailControl?.valueChanges
       .pipe(distinctUntilChanged())
       .subscribe((value) => {
