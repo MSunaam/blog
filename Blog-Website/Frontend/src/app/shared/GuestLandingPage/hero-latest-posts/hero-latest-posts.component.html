@@ -11,10 +11,7 @@
         <div class="flex flex-col">
           <p class="landingPicAuthor text-white">
             BY {{ mostRecentBlog.author.name | uppercase }} IN
-            {{
-              getCategoryValue(mostRecentBlog.category.toUpperCase())
-                | uppercase
-            }}
+            {{ mostRecentBlog.category | uppercase }}
           </p>
           <p class="landingPicHeading text-white">
             {{ mostRecentBlog.title | uppercase }}
@@ -38,10 +35,6 @@
   <div class="flex flex-col w-full h-full">
     <div class="flex items-center justify-between w-full">
       <span class="title2">New</span>
-      <span
-        class="passiveText hover:text-hover transition-all duration-300 ease-in-out"
-        >View all new</span
-      >
     </div>
     <hr />
     <div class="flex flex-col gap-5 overflow-auto basis-96">
@@ -90,10 +83,6 @@
     <div class="flex flex-col w-full h-full">
       <div class="flex items-center justify-between w-full">
         <span class="title2">New</span>
-        <span
-          class="passiveText hover:text-hover transition-all duration-300 ease-in-out"
-          >View all new</span
-        >
       </div>
       <hr />
       <div class="flex flex-col gap-5 overflow-auto basis-96">

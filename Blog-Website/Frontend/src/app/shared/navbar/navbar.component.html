@@ -5,7 +5,7 @@
       <ul class="flex flex-row gap-14 items-center">
         <li
           *ngIf="currentRoute !== '/search'"
-          class="flex items-center justify-start border border-black px-2 py-1 rounded"
+          class="flex items-center justify-start border border-gray-400 px-2 py-1 rounded-xl"
           (click)="searchInput.focus()"
           (keydown.enter)="search(searchInput.value)"
         >
@@ -21,7 +21,7 @@
           *ngFor="let link of navbarLinks"
           class="hover:text-hover transition-all duration-300 ease-in-out cursor-pointer"
         >
-          <a>{{ link.name }}</a>
+          <a [href]="link.link">{{ link.name }}</a>
         </li>
       </ul>
       <div class="relative">

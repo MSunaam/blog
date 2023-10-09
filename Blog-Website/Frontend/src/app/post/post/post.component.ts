@@ -90,6 +90,7 @@ export class PostComponent implements OnInit, OnDestroy {
           this.isLoading = false;
           this.checkAllowEdit();
           this.checkBlogLiked();
+          this.increaseView();
           // setTimeout(() => {
           //   this.isLoading = false;
           // }, 1000);
@@ -145,6 +146,18 @@ export class PostComponent implements OnInit, OnDestroy {
 
   sanitizeUrls(url: string) {
     return this._sanitizer.bypassSecurityTrustUrl(url);
+  }
+
+  increaseView() {
+    this._postService
+      .increaseView(this.blogPostId, this.loggedInUser.email)
+      .subscribe({
+        next: (res) => {
+          // console.log(res);
+          if (res) this.blogPost = res;
+        },
+        error: console.error,
+      });
   }
 
   ngOnInit(): void {

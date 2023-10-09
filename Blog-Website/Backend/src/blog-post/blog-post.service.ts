@@ -15,11 +15,23 @@ export class BlogPostService {
     @InjectModel(User.name) private _userModel: Model<UserDocument>,
   ) {}
 
+  async increaseViewCount(id: string, email: string) {
+    const post = await this._blogPostModel.findById(id);
+    const user = await this._userModel.findOne({ email: email });
+    if (!user) throw new NotFoundException('User not found');
+    if (user.viewedPosts.includes(post.id)) return;
+    user.viewedPosts.push(post);
+    await user.save();
+    if (!post) throw new NotFoundException('Post not found');
+    post.views++;
+    return post.save();
+  }
+
   search(query: string) {
     const queryArray = query.split(' ');
     // log(queryArray);
     return this._blogPostModel
-      .find({ tags: { $in: queryArray } })
+      .find({ tags: { $in: queryArray }, title: { $in: queryArray } })
       .sort({ lastUpdated: -1 })
       .populate('author')
       .exec();

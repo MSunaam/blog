@@ -61,15 +61,15 @@ export class NavbarComponent implements OnInit, OnDestroy {
   navbarLinks = [
     {
       name: 'Popular',
-      link: '/',
+      link: '/home#popular',
     },
     {
       name: 'New',
-      link: '/',
+      link: '/home#new',
     },
     {
       name: 'Reading List',
-      link: '/',
+      link: '/home#readingList',
     },
     {
       name: 'Topics',

@@ -17,6 +17,11 @@ import { log } from 'console';
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) {}
 
+  @Post('view')
+  increaseViewCount(@Body('id') id: string, @Body('email') email: string) {
+    return this.blogPostService.increaseViewCount(id, email);
+  }
+
   @Get('search')
   search(@Query('tags') query: string) {
     return this.blogPostService.search(query);

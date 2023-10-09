@@ -7,9 +7,9 @@
     class="flex flex-col w-full items-center justify-center"
     *ngIf="publicUser"
   >
-    <div class="flex flex-row gap-10 w-full">
+    <div class="flex flex-col gap-10 w-full">
       <ng-container *ngTemplateOutlet="publicUserInfo"></ng-container>
-      <div class="w-[30rem] h-full">
+      <!-- <div class="w-[30rem] h-full">
         <h5 class="h5">Latest Posts</h5>
         <div
           class="w-full max-h-72 h-full p-10 bg-white rounded flex flex-col gap-4 items-start justify-center overflow-auto"
@@ -22,7 +22,8 @@
             </div>
           </ng-container>
         </div>
-      </div>
+      </div> -->
+      <ng-container *ngTemplateOutlet="posts"></ng-container>
     </div>
   </div>
 </div>
@@ -47,6 +48,9 @@
         [innerHTML]="publicUser.bio"
       ></span>
     </p>
+    <p>
+      <span class="">Followers: {{ publicUser.followerCount }}</span>
+    </p>
     <div class="flex flex-row gap-2 items-center">
       <i class="bx bxl-facebook-circle bx-sm text-gray-500"></i>
       <i class="bx bxl-twitter bx-sm text-gray-500"></i>
@@ -57,31 +61,25 @@
       <button
         class="btn btn-danger-outline-curve"
         [ngClass]="isPreview ? 'cursor-not-allowed' : ''"
+        *ngIf="!publicUser.isFollowing"
+        (click)="follow()"
       >
         Follow
       </button>
       <button
-        data-te-toggle="tooltip"
-        title="Subscribe to new posts"
+        class="btn btn-danger-outline-curve"
+        *ngIf="publicUser.isFollowing"
         [ngClass]="isPreview ? 'cursor-not-allowed' : ''"
+        (click)="unfollow()"
       >
-        <i class="bx bxs-bell bx-tada-hover bx-sm text-gray-500 mt-1"></i>
-      </button>
-      <button
-        data-te-toggle="tooltip"
-        title="Unsubscribe"
-        [ngClass]="isPreview ? 'cursor-not-allowed' : ''"
-      >
-        <i
-          class="bx bxs-bell-ring bx-flashing-hover bx-tada-hover bx-sm text-gray-500 mt-1"
-        ></i>
+        Unfollow
       </button>
     </div>
   </div>
 </ng-template>
 
 <ng-template #heroPost>
-  <div class="overflow-hidden rounded-[8px]">
+  <div class="overflow-hidden rounded-[8px]" *ngIf="this.blogPosts.length > 0">
     <div
       class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
     >
@@ -108,4 +106,25 @@
       />
     </div>
   </div>
+</ng-template>
+
+<ng-template #posts>
+  <div class="w-full bg-white rounded shadow py-10">
+    <h1 class="h1 text-center">Blog Posts</h1>
+    <div class="flex flex-row gap-4 overflow-x-auto mt-10 px-10">
+      <ng-container *ngIf="blogPosts.length > 0; else noBlogPosts">
+        <ng-container *ngFor="let post of blogPosts">
+          <div class="py-4">
+            <a [routerLink]="['/post']" [queryParams]="{ id: post._id }">
+              <app-blog-card [blogPost]="post"></app-blog-card>
+            </a>
+          </div>
+        </ng-container>
+      </ng-container>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #noBlogPosts>
+  <div class="text-2xl font-medium text-center w-full">No Blog Posts Found</div>
 </ng-template>

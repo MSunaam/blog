@@ -20,8 +20,6 @@ export class BlogCardComponent {
   }
 
   sanitizeImageUrl(imageUrl: string) {
-    return this._sanitizer.bypassSecurityTrustUrl(
-      'http://localhost:3000/' + imageUrl
-    );
+    return this._sanitizer.bypassSecurityTrustUrl(imageUrl);
   }
 }

@@ -86,7 +86,7 @@
         >
           <span class="text-white flex gap-2 items-center justify-start"
             ><i class="bx bxs-party bx-sm text-white"></i>Followers:
-            {{ user.followers || 0 }}</span
+            {{ user.followerCount || 0 }}</span
           >
         </div>
         <div
@@ -218,10 +218,11 @@
 
 <ng-template #blogCarousel>
   <swiper
+    *ngIf="blogPosts.length > 0; else noBlogPosts"
     [config]="swiperConfig"
     class="w-1/2 bg-white rounded flex items-center justify-center"
   >
-    <ng-container *ngIf="blogPosts; else noBlogPosts">
+    <ng-container>
       <ng-template swiperSlide *ngFor="let blog of blogPosts">
         <a [routerLink]="'/post'" [queryParams]="{ id: blog._id }">
           <div
@@ -251,4 +252,6 @@
   </swiper>
 </ng-template>
 
-<ng-template #noBlogPosts swiperSlide> No Blog Posts </ng-template>
+<ng-template #noBlogPosts>
+  <div class="text-2xl font-medium text-center mt-10">No Blog Posts Found</div>
+</ng-template>

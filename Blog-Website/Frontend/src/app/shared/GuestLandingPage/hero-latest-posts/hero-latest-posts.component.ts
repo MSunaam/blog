@@ -21,10 +21,6 @@ export class HeroLatestPostsComponent implements OnInit, OnChanges {
   mostRecentBlog!: BlogPost;
   blogCategory!: BlogCategory;
 
-  getCategoryValue(category: string) {
-    return BlogCategory[category as keyof typeof BlogCategory];
-  }
-
   blogClicked(blog: BlogPost) {
     this.blogDetails.push(this.mostRecentBlog);
     this.mostRecentBlog = blog;

@@ -15,6 +15,13 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  increaseView(id: string, email: string) {
+    return this._httpClient.post<BlogPost>(`${this.baseUrl}view`, {
+      id: id,
+      email: email,
+    });
+  }
+
   getPosts(query: string) {
     return this._httpClient.get<BlogPost[]>(
       `http://localhost:3000/blog-post/search`,

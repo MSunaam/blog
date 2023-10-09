@@ -164,14 +164,6 @@ export class SignupComponent implements OnInit {
 
     this.googleSignIn();
 
-    //@ts-ignore
-    window.fbAsyncInit = function () {
-      //@ts-ignore
-      FB.getLoginStatus(function (response: Facebook.StatusResponse) {
-        console.log(response.status);
-      });
-    };
-
     this.nameControl?.valueChanges.pipe(distinctUntilChanged()).subscribe({
       next: (value) => {
         this.checkNameErrors();

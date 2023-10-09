@@ -6,7 +6,6 @@ import { AuthenticationService } from '../authentication.service';
 import { SignInRes } from 'src/app/shared/Interfaces/signInRes.interface';
 import { UserService } from 'src/app/shared/Services/user.service';
 import { CredentialResponse, PromptMomentNotification } from 'google-one-tap';
-import { Facebook } from '../facebook.interface';
 
 @Component({
   selector: 'app-signin',
@@ -141,14 +140,6 @@ export class SigninComponent {
 
     this.googleSignIn();
     // this.facebookSignIn();
-
-    //@ts-ignore
-    window.fbAsyncInit = function () {
-      //@ts-ignore
-      FB.getLoginStatus(function (response: Facebook.StatusResponse) {
-        console.log(response.status);
-      });
-    };
 
     this.emailControl?.valueChanges
       .pipe(distinctUntilChanged())

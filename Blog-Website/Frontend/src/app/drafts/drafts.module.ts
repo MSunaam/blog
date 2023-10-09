@@ -10,5 +10,6 @@ import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 @NgModule({
   declarations: [DraftsComponent, DraftCardComponent, DeleteModalComponent],
   imports: [CommonModule, DraftsRoutingModule, SharedModule],
+  exports: [DraftCardComponent],
 })
 export class DraftsModule {}

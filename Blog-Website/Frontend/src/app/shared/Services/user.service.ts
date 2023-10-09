@@ -3,12 +3,29 @@ import { Injectable } from '@angular/core';
 import { User } from '../Interfaces/user';
 import { Observable, ReplaySubject, tap } from 'rxjs';
 import { BlogPost } from '../Interfaces/blog';
+import { PublicProfile } from '../Interfaces/publicUser.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   constructor(private _httpClient: HttpClient) {}
+
+  followUser(followerEmail: string, followedEmail: string) {
+    // console.log(followerEmail, followedEmail);
+
+    return this._httpClient.post<User>('http://localhost:3000/user/follow', {
+      followerEmail: followerEmail,
+      followedEmail: followedEmail,
+    });
+  }
+
+  unfollowUser(followerEmail: string, followedEmail: string) {
+    return this._httpClient.post<User>('http://localhost:3000/user/unfollow', {
+      followerEmail: followerEmail,
+      followedEmail: followedEmail,
+    });
+  }
 
   changePassword(
     oldPassword: string,
@@ -65,8 +82,10 @@ export class UserService {
     });
   }
 
-  getUserByIdPublic(id: string): Observable<User> {
-    return this._httpClient.get<User>(`${this.baseUrl}public/${id}`);
+  getUserByIdPublic(id: string, emai: string): Observable<PublicProfile> {
+    return this._httpClient.get<PublicProfile>(`${this.baseUrl}public/${id}`, {
+      params: { requestUserEmail: emai },
+    });
   }
 
   getUserByEmail(email: string): Observable<User> {

@@ -431,8 +431,10 @@ body.modal-open{
         cursor:not-allowed;
     }
 }
-
-
+// turn on smooth scroll
+html {
+    scroll-behavior: smooth;
+}
 
 
 

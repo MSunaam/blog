@@ -9,9 +9,6 @@ import { UserExistsException } from 'src/Shared/Exceptions/UserExistsException';
 import { BlogPost } from 'src/blog-post/Schema/blog-post.schema';
 import { PublicProfileDto } from './dto/publicProfile.dto';
 import { log } from 'console';
-import { GoogleAuth, OAuth2Client } from 'google-auth-library';
-import { AuthService } from 'src/auth/auth.service';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class UserService {
@@ -19,6 +16,36 @@ export class UserService {
     @InjectModel(User.name) private _userModel: Model<User>,
     @InjectModel(BlogPost.name) private _blogModel: Model<BlogPost>,
   ) {}
+
+  async followUser(followerEmail: string, followedEmail: string) {
+    const follower = await this._userModel.findOne({ email: followerEmail });
+    const followed = await this._userModel.findOne({ email: followedEmail });
+    if (!follower) throw new NotFoundException('Follower not found');
+    if (!followed) throw new NotFoundException('Followed not found');
+    if (follower.following.includes(followed.id))
+      throw new NotFoundException('Already following');
+    follower.following.push(followed.id);
+    followed.followers.push(follower.id);
+    followed.followerCount++;
+    await follower.save();
+    await followed.save();
+    return follower;
+  }
+
+  async unfollowUser(followerEmail: string, followedEmail: string) {
+    const follower = await this._userModel.findOne({ email: followerEmail });
+    const followed = await this._userModel.findOne({ email: followedEmail });
+    if (!follower) throw new NotFoundException('Follower not found');
+    if (!followed) throw new NotFoundException('Followed not found');
+    if (!follower.following.includes(followed.id))
+      throw new NotFoundException('Not following');
+    await follower.updateOne({ $pull: { following: followed.id } });
+    await follower.save();
+    await followed.updateOne({ $pull: { followers: follower.id } });
+    followed.followerCount--;
+    await followed.save();
+    return follower;
+  }
 
   async changePassword(
     oldPassword: string,
@@ -73,7 +100,11 @@ export class UserService {
     };
   }
 
-  async getPublicProfile(id: string) {
+  async getPublicProfile(id: string, requestUserEmail: string) {
+    const requestUser = await this._userModel.findOne({
+      email: requestUserEmail,
+    });
+    if (!requestUser) throw new NotFoundException('User not found');
     const user = await this._userModel.findById(id).populate({
       path: 'blogPosts',
       options: { limit: 5 },
@@ -86,15 +117,23 @@ export class UserService {
         'likes',
       ],
     });
+    let isFollowing = false;
+    user.followers.forEach(async (follower) => {
+      if (follower == requestUser.id) {
+        isFollowing = true;
+      }
+    });
     if (!user) throw new NotFoundException('User not found');
     const publicProfile: PublicProfileDto = {
+      email: user.email,
       name: user.name,
       profilePicture: user.profilePicture,
       bio: user.bio,
-      followers: user.followers,
+      followerCount: user.followerCount,
       likes: user.likes,
       views: user.views,
       blogPosts: user.blogPosts,
+      isFollowing: isFollowing,
     };
     return publicProfile;
   }
