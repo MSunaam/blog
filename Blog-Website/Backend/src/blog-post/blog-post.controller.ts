@@ -12,10 +12,30 @@ import { BlogPostService } from './blog-post.service';
 import { CreateBlogPostDto } from './dto/create-blog-post.dto';
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
 import { log } from 'console';
+import { BlogCategory } from 'src/Shared/Enums/BlogCategory.enum';
 
 @Controller('blog-post')
 export class BlogPostController {
   constructor(private readonly blogPostService: BlogPostService) {}
+
+  @Get('random')
+  random() {
+    return this.blogPostService.random();
+  }
+
+  @Get('popular')
+  findPopular() {
+    return this.blogPostService.findPopular();
+  }
+
+  @Get('category/:cat')
+  findByCategory(@Param('cat') category: string) {
+    category = category.toUpperCase();
+    // log(category);
+    const cat = BlogCategory[category];
+    // log(cat);
+    return this.blogPostService.findByCategory(cat);
+  }
 
   @Post('view')
   increaseViewCount(@Body('id') id: string, @Body('email') email: string) {
@@ -23,8 +43,11 @@ export class BlogPostController {
   }
 
   @Get('search')
-  search(@Query('tags') query: string) {
-    return this.blogPostService.search(query);
+  search(
+    @Query('tags') query: string,
+    @Query('pageNumber') pageNumber: number,
+  ) {
+    return this.blogPostService.search(query, pageNumber);
   }
 
   @Post()

@@ -9,7 +9,7 @@
   <div class="h-20">
     <app-navbar></app-navbar>
   </div>
-  <div *ngIf="!isLoading">
+  <div *ngIf="blogPost">
     <!-- {{ loggedInUser | json }} -->
     <div class="container mx-auto w-full h-full bg-white">
       <div class="flex items-center justify-center">
@@ -18,13 +18,13 @@
             <h1 class="text-[36px] font-bold text-[#4A4A4A]">
               {{ blogPost.title }}
             </h1>
-            <button
+            <!-- <button
               class="btn btn-success-outline-curve"
               *ngIf="allowEdit"
               (click)="editPost()"
             >
               Edit
-            </button>
+            </button> -->
           </div>
           <p class="text-[#000] text-[18px] font-semibold">
             {{ blogPost.summary }}
@@ -40,7 +40,12 @@
               </span></a
             >
             in
-            <span class="text-black">{{ blogPost.category }}</span>
+            <a
+              class="text-black"
+              routerLink="/reading-list"
+              [queryParams]="{ list: blogPost.category }"
+              >{{ blogPost.category }}</a
+            >
           </p>
         </div>
       </div>
@@ -51,7 +56,7 @@
       >
         <div class="w-3/4 flex flex-col items-center justify-start mb-24">
           <div class="flex flex-row justify-around items-start w-full">
-            <div class="w-10 flex flex-col gap-3">
+            <div class="w-10 flex-col gap-3 hidden">
               <a class="cursor-pointer"
                 ><i
                   class="bx bxl-facebook-circle bx-sm text-passive hover:scale-105 transition-all duration-200 ease-in-out"

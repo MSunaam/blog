@@ -13,15 +13,64 @@
           class="w-1/4 border border-black rounded focus:outline-none px-2"
           [formControl]="searchControl"
           #searchInputControl
+          (keydown.enter)="getPosts(searchInputControl.value)"
         />
       </div>
-      <div class="flex flex-col">
+      <ng-container *ngIf="searchResults">
         <ng-container *ngIf="searchResults.length > 0; else noPostsFound">
-          <ng-container *ngFor="let post of searchResults">
-            <app-blog-search [blogPost]="post"></app-blog-search>
-          </ng-container>
+          <div class="flex flex-col gap-3">
+            <ng-container *ngFor="let post of searchResults">
+              <app-blog-search [blogPost]="post"></app-blog-search>
+            </ng-container>
+          </div>
         </ng-container>
-      </div>
+        <div class="w-full">
+          <nav aria-label="Page navigation example">
+            <ul class="list-style-none flex gap-2">
+              <li>
+                <button
+                  class="relative block rounded bg-transparent px-3 py-1.5 text-sm transition-all duration-300"
+                  [ngClass]="
+                    currentPage === 1 ? 'text-gray-400 cursor-not-allowed' : ''
+                  "
+                  [disabled]="currentPage === 1"
+                  (click)="getPosts(searchInputControl.value, currentPage - 1)"
+                >
+                  Previous
+                </button>
+              </li>
+              <li *ngFor="let page of pageNumbers">
+                <button
+                  [ngClass]="
+                    currentPage === page
+                      ? 'text-white bg-black rounded'
+                      : 'hover:text-white hover:bg-black cursor-pointer'
+                  "
+                  [disabled]="currentPage === page"
+                  (click)="getPosts(searchInputControl.value, page)"
+                  class="relative block rounded bg-transparent px-3 py-1.5 text-sm transition-all duration-300"
+                >
+                  {{ page }}
+                </button>
+              </li>
+              <li>
+                <button
+                  [disabled]="currentPage === totalPages"
+                  (click)="getPosts(searchInputControl.value, currentPage + 1)"
+                  class="relative block rounded bg-transparent px-3 py-1.5 text-sm transition-all duration-300"
+                  [ngClass]="
+                    currentPage === totalPages
+                      ? 'text-gray-400 cursor-not-allowed'
+                      : ''
+                  "
+                >
+                  Next
+                </button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </ng-container>
     </div>
   </div>
 

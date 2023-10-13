@@ -57,6 +57,7 @@ export class AuthenticationService {
     localStorage.setItem('access_token', res.access_token);
     localStorage.setItem('accessExpiry', res.accessExpiry);
     localStorage.setItem('user', JSON.stringify(res.user));
+    this._userService.setUser(res.user);
   }
   getUser() {
     return JSON.parse(localStorage.getItem('user')!);
@@ -72,6 +73,7 @@ export class AuthenticationService {
     if (!this.isLoggedIn()) {
       this._router.navigate(['/auth']);
       localStorage.clear();
+      this._userService.user$.complete();
       return;
     }
 

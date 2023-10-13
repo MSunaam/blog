@@ -5,24 +5,50 @@ import { lastValueFrom } from 'rxjs';
 import { AuthenticationService } from 'src/app/auth/authentication.service';
 import { BlogPost } from 'src/app/shared/Interfaces/blog';
 import { GuestPageService } from 'src/app/shared/Services/guest-page.service';
+import { PostService } from 'src/app/shared/Services/post.service';
 
 @Component({
   selector: 'app-landing-page',
   templateUrl: './landing-page.component.html',
   styleUrls: ['./landing-page.component.scss'],
 })
-export class LandingPageComponent implements AfterViewInit, OnInit {
+export class LandingPageComponent implements OnInit {
   constructor(
     private _guestPageService: GuestPageService,
     private _authService: AuthenticationService,
-    private _sanitizer: DomSanitizer
+    private _sanitizer: DomSanitizer,
+    private _postService: PostService
   ) {}
 
   isModalClosed: boolean = true;
 
   blogDetails: BlogPost[] = [];
 
-  scrollLeftAmount: number = 220;
+  popularPosts: BlogPost[] = [];
+  randomPost: BlogPost[] = [];
+
+  getPopularPosts() {
+    this._postService.getPopular().subscribe({
+      next: (res) => {
+        this.popularPosts = res;
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
+
+  getRandomPost() {
+    this._postService.getRandom().subscribe({
+      next: (res) => {
+        this.randomPost = res;
+        // console.log(this.randomPost[0].author);
+      },
+      error: (err) => {
+        console.log(err);
+      },
+    });
+  }
 
   sanitizeUrls(url: string) {
     return this._sanitizer.bypassSecurityTrustUrl(url);
@@ -32,24 +58,6 @@ export class LandingPageComponent implements AfterViewInit, OnInit {
     if (close) {
       this.isModalClosed = true;
     }
-  }
-
-  scrollLeft() {
-    document.getElementById('readingList')!.scrollBy({
-      left: -this.scrollLeftAmount,
-      behavior: 'smooth',
-    });
-  }
-  scrollRight() {
-    document.getElementById('readingList')!.scrollBy({
-      left: this.scrollLeftAmount,
-      behavior: 'smooth',
-    });
-  }
-  ngAfterViewInit() {
-    document.getElementById('readingList')!.scrollTo({
-      left: 0,
-    });
   }
   async ngOnInit() {
     await lastValueFrom(this._guestPageService.getLatestPosts())
@@ -63,5 +71,7 @@ export class LandingPageComponent implements AfterViewInit, OnInit {
     if (!this._authService.isLoggedIn()) {
       this.isModalClosed = false;
     }
+    this.getPopularPosts();
+    this.getRandomPost();
   }
 }

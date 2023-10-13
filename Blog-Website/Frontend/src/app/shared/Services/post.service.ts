@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BlogPost } from '../Interfaces/blog';
+import { BlogPost, BlogPostPaginated } from '../Interfaces/blog';
 import { User } from '../Interfaces/user';
 import { ReplaySubject, Subject } from 'rxjs';
 import { DraftPost, newDraftPost } from '../Interfaces/draftPost';
@@ -15,6 +15,20 @@ export class PostService {
 
   previewBlogPost: ReplaySubject<BlogPost> = new ReplaySubject<BlogPost>(1);
 
+  getRandom() {
+    return this._httpClient.get<BlogPost[]>(`${this.baseUrl}random`);
+  }
+
+  getPopular() {
+    return this._httpClient.get<BlogPost[]>(`${this.baseUrl}popular`);
+  }
+
+  getPostByCategory(category: string) {
+    return this._httpClient.get<BlogPost[]>(
+      `http://localhost:3000/blog-post/category/${category}`
+    );
+  }
+
   increaseView(id: string, email: string) {
     return this._httpClient.post<BlogPost>(`${this.baseUrl}view`, {
       id: id,
@@ -22,10 +36,10 @@ export class PostService {
     });
   }
 
-  getPosts(query: string) {
-    return this._httpClient.get<BlogPost[]>(
+  getPosts(query: string, pageNumber: number = 1) {
+    return this._httpClient.get<BlogPostPaginated>(
       `http://localhost:3000/blog-post/search`,
-      { params: { tags: query } }
+      { params: { tags: query, pageNumber: pageNumber } }
     );
   }
 

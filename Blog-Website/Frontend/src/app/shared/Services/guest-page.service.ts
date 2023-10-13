@@ -16,4 +16,8 @@ export class GuestPageService {
       `${this.baseUrl}blog-post/latest`
     ) as Observable<BlogPost[]>;
   }
+
+  getPopularPosts() {
+    return this._httpClient.get(`${this.baseUrl}blog-post/popular`);
+  }
 }

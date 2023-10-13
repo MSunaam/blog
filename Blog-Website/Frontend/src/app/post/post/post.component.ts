@@ -44,12 +44,14 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   checkAllowEdit() {
+    if (!this.loggedInUser) return;
     if (this.loggedInUser._id === this.blogPost.author._id) {
       this.allowEdit = true;
     }
   }
 
   checkBlogLiked() {
+    if (!this.loggedInUser) return;
     this.loggedInUser.likedPosts.forEach((post) => {
       // console.log(post);
       // console.log(this.blogPostId);
@@ -112,6 +114,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   likeBlogPost() {
+    if (!this.loggedInUser) return;
     this._postService
       .likeBlogPost(this.loggedInUser._id, this.blogPostId)
       .subscribe({
@@ -149,6 +152,7 @@ export class PostComponent implements OnInit, OnDestroy {
   }
 
   increaseView() {
+    if (!this.loggedInUser) return;
     this._postService
       .increaseView(this.blogPostId, this.loggedInUser.email)
       .subscribe({

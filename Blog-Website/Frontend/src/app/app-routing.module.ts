@@ -8,6 +8,7 @@ import { WriteBlogModule } from './write-blog/write-blog.module';
 import { DraftsModule } from './drafts/drafts.module';
 import { PreviewPostModule } from './preview-post/preview-post.module';
 import { SearchModule } from './search/search.module';
+import { ReadingListModule } from './reading-list/reading-list.module';
 
 const routes: Routes = [
   { path: '', loadChildren: () => PagesModule },
@@ -18,6 +19,7 @@ const routes: Routes = [
   { path: 'drafts', loadChildren: () => DraftsModule },
   { path: 'preview', loadChildren: () => PreviewPostModule },
   { path: 'search', loadChildren: () => SearchModule },
+  { path: 'reading-list', loadChildren: () => ReadingListModule },
 ];
 
 @NgModule({

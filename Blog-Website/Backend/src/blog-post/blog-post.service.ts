@@ -7,6 +7,7 @@ import { BlogPost, BlogPostDocument } from './Schema/blog-post.schema';
 import { User, UserDocument } from 'src/user/Schema/user.schema';
 import * as bcrypt from 'bcrypt';
 import { log } from 'console';
+import { BlogCategory } from 'src/Shared/Enums/BlogCategory.enum';
 
 @Injectable()
 export class BlogPostService {
@@ -14,6 +15,41 @@ export class BlogPostService {
     @InjectModel(BlogPost.name) private _blogPostModel: Model<BlogPostDocument>,
     @InjectModel(User.name) private _userModel: Model<UserDocument>,
   ) {}
+
+  static pageSize = 2;
+
+  async random() {
+    const post = await this._blogPostModel.aggregate([
+      {
+        $sample: { size: 1 },
+      },
+    ]);
+    if (post.length === 0) throw new NotFoundException('Post not found');
+    const author = await this._userModel.findById(post[0].author);
+    post[0].author = author;
+    return post;
+  }
+  async findPopular() {
+    return await this._blogPostModel
+      .find()
+      .sort({ views: -1, lastUpdated: -1 })
+      .limit(5)
+      .populate('author')
+      .exec();
+  }
+  async findByCategory(category: BlogCategory) {
+    return await this._blogPostModel
+      .find(
+        { category: category },
+        {},
+        {
+          limit: 10,
+          sort: { lastUpdated: -1 },
+        },
+      )
+      .populate('author')
+      .exec();
+  }
 
   async increaseViewCount(id: string, email: string) {
     const post = await this._blogPostModel.findById(id);
@@ -27,14 +63,33 @@ export class BlogPostService {
     return post.save();
   }
 
-  search(query: string) {
+  async search(query: string, pageNumber: number = 0) {
     const queryArray = query.split(' ');
-    // log(queryArray);
-    return this._blogPostModel
-      .find({ tags: { $in: queryArray }, title: { $in: queryArray } })
+    // log(pageNumber);
+
+    let posts = await this._blogPostModel.find({
+      $or: [{ tags: { $in: queryArray } }, { title: { $in: queryArray } }],
+    });
+
+    const totalPages = Math.ceil(posts.length / BlogPostService.pageSize);
+
+    posts = await this._blogPostModel
+      .find({
+        $or: [{ tags: { $in: queryArray } }, { title: { $in: queryArray } }],
+      })
       .sort({ lastUpdated: -1 })
+      .limit(BlogPostService.pageSize)
+      .skip(pageNumber * BlogPostService.pageSize)
       .populate('author')
       .exec();
+
+    return {
+      posts: posts,
+      count: posts.length,
+      currentPage: +pageNumber + 1,
+      totalPages: totalPages,
+      pageSize: BlogPostService.pageSize,
+    };
   }
 
   async saveDraft(createBlogPostDto: CreateBlogPostDto) {

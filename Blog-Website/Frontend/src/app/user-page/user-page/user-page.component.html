@@ -36,10 +36,18 @@
   >
     <div>
       <img
+        *ngIf="publicUser.profilePicture; else noPic"
         [src]="sanitizeUrls(publicUser.profilePicture)"
         alt="Profile Picture"
         class="rounded-full w-32 h-32 object-cover"
       />
+      <ng-template #noPic>
+        <div
+          class="w-32 h-32 rounded-full bg-purple text-white text-7xl font-medium flex items-center justify-center"
+        >
+          {{ publicUser.name[0] }}
+        </div>
+      </ng-template>
     </div>
     <p class="text-xl">{{ publicUser.name }}</p>
     <p>

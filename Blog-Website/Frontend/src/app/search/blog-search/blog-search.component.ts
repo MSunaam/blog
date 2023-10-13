@@ -12,7 +12,7 @@ export class BlogSearchComponent {
 
   @Input() blogPost!: BlogPost;
 
-  openDraft() {
+  openBlog() {
     this._router.navigate(['/post'], {
       queryParams: { id: this.blogPost._id },
     });

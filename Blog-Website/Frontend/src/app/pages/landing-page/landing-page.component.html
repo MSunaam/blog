@@ -10,91 +10,82 @@
   <div class="w-full" id="readingList">
     <app-reading-lists></app-reading-lists>
   </div>
-  <div class="flex flex-col gap-8">
+  <div class="flex flex-col gap-8" *ngIf="popularPosts.length > 0">
     <div class="flex flex-row justify-between items-center">
       <span class="title1" id="popular">Popular</span>
-      <a
-        class="hover:text-hover text-passive transition-all duration-300 ease-in-out cursor-pointer"
-        >View all</a
-      >
     </div>
     <div class="grid grid-cols-4 gap-4">
       <div
+        routerLink="/post"
+        [queryParams]="{ id: popularPosts[0]._id }"
         class="shadow rounded-[8px] col-span-2 row-span-2 overflow-hidden cursor-pointer"
       >
-        <div class="relative">
+        <div class="relative w-full h-full">
           <div
             class="absolute left-0 top-0 w-full h-full px-5 py-3 landingPicText rounded-[8px] transition-all duration-300 ease-in-out peer z-10"
           >
             <p class="landingPicAuthor text-white">
-              BY TOMAS LAURINAVICIUS IN DESIGN PROCESS
+              BY {{ popularPosts[0].author.name }} in
+              {{ popularPosts[0].category }}
             </p>
             <p class="landingPicHeading text-white">
-              Web page layout 101: website anatomy every designer needs to learn
+              {{ popularPosts[0].title }}
             </p>
             <p class="landingPicContent text-white">
-              User research is the reality check every project needs. Here's our
-              guide to why you should be doing it — and how to get started.
+              {{ popularPosts[0].summary }}
             </p>
           </div>
-          <img
-            src="./assets/popularImg.png"
-            class="rounded-[8px] filter peer-hover:blur transition-all duration-300 ease-in-out z-0"
-            alt="image"
-          />
+          <div class="overflow-hidden h-72 flex items-center">
+            <img
+              [src]="sanitizeUrls(popularPosts[0].leadImage)"
+              class="w-full h-full object-cover"
+              alt="image"
+            />
+          </div>
         </div>
       </div>
       <div
-        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
-      >
-        <p class="text-passive text-base uppercase font-normal">Freelancing</p>
-        <p class="text-default text-lg">
-          Affiliate Systems Suck, So We Rolled Our Own
-        </p>
-      </div>
-      <div
-        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
-      >
-        <p class="text-passive text-base uppercase font-normal">Resource</p>
-        <p class="text-default text-lg">How not to design web forms</p>
-      </div>
-      <div
+        routerLink="/post"
+        [queryParams]="{ id: post._id }"
+        *ngFor="let post of popularPosts.slice(1, popularPosts.length)"
         class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
       >
         <p class="text-passive text-base uppercase font-normal">
-          Design Process
+          {{ post.title }}
         </p>
         <p class="text-default text-lg">
-          B2B Lead Generation - Tips and Strategies for 2018
+          {{ post.summary }}
         </p>
-      </div>
-      <div
-        class="shadow rounded-[8px] p-5 flex flex-col justify-center gap-3 font-semibold cursor-pointer"
-      >
-        <p class="text-passive text-base uppercase font-normal">INSPIRATION</p>
-        <p class="text-default text-lg">8 Best WordPress Ecommerce Plugins</p>
       </div>
     </div>
   </div>
-  <div class="flex flex-col justify-start gap-8">
+  <div
+    class="flex flex-col justify-start gap-8"
+    *ngIf="randomPost.length > 0"
+    routerLink="/post"
+    [queryParams]="{ id: randomPost[0]._id }"
+  >
     <h1 class="title1">Random</h1>
     <div class="flex flex-row">
       <div class="flex-1 bg-white rounded-l-[8px] shadow p-10">
-        <p class="landingPicAuthor">BY TOMAS LAURINAVICIUS IN TUTORIALS</p>
+        <p class="landingPicAuthor">
+          BY {{ randomPost[0].author.name }} in {{ randomPost[0].category }}
+        </p>
         <p class="landingPicHeading">
-          Mind-Blowing Twitter Stats and Facts on Our Favorite Network (2018)
+          {{ randomPost[0].title }}
         </p>
         <p class="landingPicContent">
-          User research is the reality check every project needs. Here's our
-          guide to why you should be doing it — and how to get started.
+          {{ randomPost[0].summary }}
         </p>
       </div>
       <div class="overflow-hidden flex-1">
-        <img
-          src="./assets/random.png"
-          alt="img"
-          class="flex-1 rounded-r-[8px] hover:scale-105 transition-all duration-300 ease-in-out cursor-pointer"
-        />
+        <div class="overflow-hidden h-72 flex items-center">
+          <img
+            [src]="sanitizeUrls(randomPost[0].leadImage)"
+            class="w-full h-full object-cover"
+            alt="image"
+          />
+        </div>
       </div>
     </div>
   </div>

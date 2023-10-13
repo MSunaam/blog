@@ -64,9 +64,14 @@ export class UserPageComponent implements OnInit {
   }
 
   getPublicUser() {
+    // if (!this.user) return;
     this._userService.getUserByIdPublic(this.id, this.user.email).subscribe({
       next: (user) => {
         this.publicUser = user;
+        this.publicUser.bio = this.publicUser.bio
+          .replace(/<[^>]*>/g, '')
+          .trim();
+        if (!this.user) return;
         if (this.publicUser.email === this.user.email) {
           this.isPreview = true;
           this._router.navigate(['/user/public'], {
@@ -77,10 +82,6 @@ export class UserPageComponent implements OnInit {
         // console.log(this.publicUser);
 
         // this.getUserBlogPosts();
-
-        this.publicUser.bio = this.publicUser.bio
-          .replace(/<[^>]*>/g, '')
-          .trim();
       },
       error: console.error,
     });

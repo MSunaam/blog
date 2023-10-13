@@ -17,3 +17,11 @@ export interface BlogPost {
   isDraft: boolean;
   tags: string[];
 }
+
+export interface BlogPostPaginated {
+  posts: BlogPost[];
+  count: number;
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+}

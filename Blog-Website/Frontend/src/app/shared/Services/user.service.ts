@@ -72,6 +72,7 @@ export class UserService {
 
   refreshLoggedInUser() {
     const user = JSON.parse(localStorage.getItem('user')!) as User;
+    if (!user) return;
     this.getUserByEmail(user.email).subscribe({
       next: (user: User) => {
         this.setUser(user);
@@ -82,9 +83,9 @@ export class UserService {
     });
   }
 
-  getUserByIdPublic(id: string, emai: string): Observable<PublicProfile> {
+  getUserByIdPublic(id: string, email: string = ''): Observable<PublicProfile> {
     return this._httpClient.get<PublicProfile>(`${this.baseUrl}public/${id}`, {
-      params: { requestUserEmail: emai },
+      params: { requestUserEmail: email },
     });
   }
 
