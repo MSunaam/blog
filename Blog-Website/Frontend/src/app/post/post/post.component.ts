@@ -89,6 +89,7 @@ export class PostComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (post: BlogPost) => {
           this.blogPost = post;
+          console.log(this.blogPost);
           this.isLoading = false;
           this.checkAllowEdit();
           this.checkBlogLiked();

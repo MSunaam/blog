@@ -71,10 +71,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       name: 'Reading List',
       link: '/home#readingList',
     },
-    {
-      name: 'Topics',
-      link: '/',
-    },
   ];
 
   search(search: string) {

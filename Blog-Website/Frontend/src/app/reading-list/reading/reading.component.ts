@@ -43,7 +43,7 @@ export class ReadingComponent implements OnInit, OnDestroy {
       .getPostByCategory(this.readingListName.title.toUpperCase())
       .subscribe({
         next: (res) => {
-          // console.log(res);
+          console.log(res);
           this.blogPosts = res;
           this._loaderService.hideLoader();
         },

@@ -30,6 +30,7 @@ export class UserPageComponent implements OnInit {
 
   follow() {
     if (this.publicUser.isFollowing || this.isPreview) return;
+    if (!this.user) return;
     this._userService
       .followUser(this.user.email, this.publicUser.email)
       .subscribe({
@@ -64,8 +65,11 @@ export class UserPageComponent implements OnInit {
   }
 
   getPublicUser() {
-    // if (!this.user) return;
-    this._userService.getUserByIdPublic(this.id, this.user.email).subscribe({
+    let email = '';
+    if (this.user) {
+      email = this.user.email;
+    }
+    this._userService.getUserByIdPublic(this.id, email).subscribe({
       next: (user) => {
         this.publicUser = user;
         this.publicUser.bio = this.publicUser.bio

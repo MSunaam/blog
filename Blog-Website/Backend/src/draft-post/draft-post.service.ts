@@ -46,7 +46,7 @@ export class DraftPostService {
     await user.updateOne({ $pull: { draftPosts: draft._id } });
     await user.save();
 
-    return await newBlogPost.save();
+    return (await newBlogPost.save()).populate('author');
   }
 
   async findAuthor(userID: string) {

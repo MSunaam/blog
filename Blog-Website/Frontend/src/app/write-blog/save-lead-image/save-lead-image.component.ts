@@ -63,6 +63,7 @@ export class SaveLeadImageComponent implements OnInit, OnDestroy {
           this.isModalClosed.emit(true);
         },
         error: (err) => {
+          alert(JSON.stringify(err));
           console.log(err);
         },
       });

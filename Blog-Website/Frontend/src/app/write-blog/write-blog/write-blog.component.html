@@ -18,13 +18,13 @@
           <input
             formControlName="titleInputControl"
             type="text"
-            class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
+            class="border-b py-1 px-2 bg-transparent focus:outline-none min-w-1/2 max-w-[80%] focus:border-b-black text-2xl"
             placeholder="Title"
           />
           <input
             formControlName="summaryInputControl"
             type="text"
-            class="border-b py-1 px-2 bg-transparent focus:outline-none w-1/2 focus:border-b-black text-2xl"
+            class="border-b py-1 px-2 bg-transparent focus:outline-none min-w-1/2 max-w-[80%] focus:border-b-black text-2xl"
             placeholder="Summary"
           />
         </div>
@@ -59,6 +59,8 @@
           <button
             class="btn btn-primary"
             (click)="openLeadImageModal()"
+            [disabled]="!newDraft._id"
+            [ngClass]="newDraft._id ? '' : 'btn-disabled'"
             type="button"
           >
             Add Lead Image
@@ -175,7 +177,7 @@
           class="btn btn-primary-outline"
           [disabled]="checkIfNewDraftEmpty()"
           [ngClass]="checkIfNewDraftEmpty() ? 'btn-disabled' : ''"
-          (click)="publishPost()"
+          (click)="saveDraftPublish()"
         >
           Publish
         </button>

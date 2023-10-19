@@ -86,11 +86,12 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
   isLeadImageModalOpen: boolean = false;
 
   publishPost() {
+    this.saveDraftPost();
     if (this.newDraft._id) {
       this.newDraft.tags = this.tags;
       this._postService.publishDraft(this.newDraft._id!).subscribe({
         next: (post) => {
-          // console.log(post);
+          console.log(post);
           this._router.navigate(['/post'], { queryParams: { id: post._id } });
         },
         error: console.error,
@@ -170,6 +171,23 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     });
   }
 
+  saveDraftPublish() {
+    if (this.checkIfNewDraftEmpty()) return;
+    this.saveChangesLoader = true;
+    this.newDraft.tags = this.tags;
+    this._postService.saveDraftPost(this.newDraft).subscribe({
+      next: (post) => {
+        this.newDraft = post;
+        this._router.navigate([], { queryParams: { id: post._id } });
+        setTimeout(() => {
+          this.saveChangesLoader = false;
+        }, 1000);
+        this.publishPost();
+      },
+      error: console.error,
+    });
+  }
+
   openCancelPostModal() {
     this.isCancelPostModalOpen = true;
   }
@@ -185,6 +203,7 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
     //   queryParams: { preview: true, id: this.newBlog._id },
     //   queryParamsHandling: 'merge',
     // });
+    this.saveDraftPost();
     this._router.navigate(['/preview'], {
       queryParams: { id: this.newDraft._id },
     });
@@ -268,6 +287,11 @@ export class WriteBlogComponent implements OnInit, OnDestroy {
 
       this._postService.getDraftById(this.draftId).subscribe({
         next: (draft: DraftPost) => {
+          if (!draft) {
+            this._router.navigate(['/write-blog']);
+            return;
+          }
+
           this.newDraft = draft;
           this.newBlogPostForm.patchValue(
             {

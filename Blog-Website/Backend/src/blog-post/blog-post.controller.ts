@@ -7,12 +7,14 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { BlogPostService } from './blog-post.service';
 import { CreateBlogPostDto } from './dto/create-blog-post.dto';
 import { UpdateBlogPostDto } from './dto/update-blog-post.dto';
 import { log } from 'console';
 import { BlogCategory } from 'src/Shared/Enums/BlogCategory.enum';
+import { BlogGuard } from './blog-post.guard';
 
 @Controller('blog-post')
 export class BlogPostController {
@@ -30,6 +32,7 @@ export class BlogPostController {
 
   @Get('category/:cat')
   findByCategory(@Param('cat') category: string) {
+    // log(category);
     category = category.toUpperCase();
     // log(category);
     const cat = BlogCategory[category];
@@ -38,6 +41,7 @@ export class BlogPostController {
   }
 
   @Post('view')
+  @UseGuards(BlogGuard)
   increaseViewCount(@Body('id') id: string, @Body('email') email: string) {
     return this.blogPostService.increaseViewCount(id, email);
   }
@@ -51,6 +55,7 @@ export class BlogPostController {
   }
 
   @Post()
+  @UseGuards(BlogGuard)
   create(@Body() createBlogPostDto: CreateBlogPostDto) {
     return this.blogPostService.create(createBlogPostDto);
   }

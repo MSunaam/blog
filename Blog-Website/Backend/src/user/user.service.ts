@@ -100,11 +100,14 @@ export class UserService {
     };
   }
 
-  async getPublicProfile(id: string, requestUserEmail: string) {
-    const requestUser = await this._userModel.findOne({
-      email: requestUserEmail,
-    });
-    if (!requestUser) throw new NotFoundException('User not found');
+  async getPublicProfile(id: string, requestUserEmail: string = '') {
+    if (requestUserEmail !== '') {
+      var requestUser = await this._userModel.findOne({
+        email: requestUserEmail,
+      });
+      if (!requestUser) throw new NotFoundException('User not found');
+    }
+
     const user = await this._userModel.findById(id).populate({
       path: 'blogPosts',
       options: { limit: 5 },
@@ -118,11 +121,13 @@ export class UserService {
       ],
     });
     let isFollowing = false;
-    user.followers.forEach(async (follower) => {
-      if (follower == requestUser.id) {
-        isFollowing = true;
-      }
-    });
+    if (requestUserEmail !== '') {
+      user.followers.forEach(async (follower) => {
+        if (follower == requestUser.id) {
+          isFollowing = true;
+        }
+      });
+    }
     if (!user) throw new NotFoundException('User not found');
     const publicProfile: PublicProfileDto = {
       email: user.email,

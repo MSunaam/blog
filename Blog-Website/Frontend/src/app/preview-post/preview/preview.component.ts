@@ -69,18 +69,16 @@ export class PreviewComponent implements OnInit, OnDestroy {
 
   getAuthor() {
     this._loaderService.showLoader();
-    this.authorSubscription = this._postService
-      .getDraftAuthor(this.draftPost.author)
-      .subscribe({
-        next: (author: User) => {
-          this.author = author;
-          this._loaderService.hideLoader();
-        },
-        error: (error) => {
-          console.log(error);
-          this._loaderService.hideLoader();
-        },
-      });
+    this._postService.getDraftAuthor(this.draftPost.author).subscribe({
+      next: (author: User) => {
+        this.author = author;
+        this._loaderService.hideLoader();
+      },
+      error: (error) => {
+        console.log(error);
+        this._loaderService.hideLoader();
+      },
+    });
   }
 
   editPost() {
@@ -97,6 +95,5 @@ export class PreviewComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.draftPostSubscription.unsubscribe();
     this.loaderSubscription.unsubscribe();
-    this.authorSubscription.unsubscribe();
   }
 }

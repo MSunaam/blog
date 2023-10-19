@@ -60,12 +60,12 @@ export class BlogPostService {
     await user.save();
     if (!post) throw new NotFoundException('Post not found');
     post.views++;
-    return post.save();
+    return (await post.save()).populate('author');
   }
 
   async search(query: string, pageNumber: number = 0) {
     const queryArray = query.split(' ');
-    // log(pageNumber);
+    log(queryArray);
 
     let posts = await this._blogPostModel.find({
       $or: [{ tags: { $in: queryArray } }, { title: { $in: queryArray } }],
@@ -75,7 +75,7 @@ export class BlogPostService {
 
     posts = await this._blogPostModel
       .find({
-        $or: [{ tags: { $in: queryArray } }, { title: { $in: queryArray } }],
+        $or: [{ tags: { $in: queryArray } }],
       })
       .sort({ lastUpdated: -1 })
       .limit(BlogPostService.pageSize)

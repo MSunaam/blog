@@ -9,15 +9,31 @@ import { DraftsModule } from './drafts/drafts.module';
 import { PreviewPostModule } from './preview-post/preview-post.module';
 import { SearchModule } from './search/search.module';
 import { ReadingListModule } from './reading-list/reading-list.module';
+import { authGuard } from './auth/auth.guard';
 
 const routes: Routes = [
   { path: '', loadChildren: () => PagesModule },
   { path: 'auth', loadChildren: () => AuthModule },
-  { path: 'user', loadChildren: () => UserPageModule },
+  {
+    path: 'user',
+    loadChildren: () => UserPageModule,
+  },
   { path: 'post', loadChildren: () => PostModule },
-  { path: 'write-blog', loadChildren: () => WriteBlogModule },
-  { path: 'drafts', loadChildren: () => DraftsModule },
-  { path: 'preview', loadChildren: () => PreviewPostModule },
+  {
+    path: 'write-blog',
+    loadChildren: () => WriteBlogModule,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'drafts',
+    loadChildren: () => DraftsModule,
+    canActivate: [authGuard],
+  },
+  {
+    path: 'preview',
+    loadChildren: () => PreviewPostModule,
+    canActivate: [authGuard],
+  },
   { path: 'search', loadChildren: () => SearchModule },
   { path: 'reading-list', loadChildren: () => ReadingListModule },
 ];

@@ -13,6 +13,7 @@ import {
   FileTypeValidator,
   Query,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -24,6 +25,7 @@ import { ApiBody, ApiParam, ApiTags } from '@nestjs/swagger';
 import { FollowDto } from './dto/followDto.dto';
 import { likeBlogPostDto } from './dto/likeBlogPostDto.dto';
 import { ChangePasswordDto } from './dto/changePasswordDto.dto';
+import { BlogGuard } from 'src/blog-post/blog-post.guard';
 
 @ApiTags('User')
 @Controller('user')
@@ -33,6 +35,7 @@ export class UserController {
   imageUrl!: string;
 
   @Post('follow')
+  @UseGuards(BlogGuard)
   @ApiBody({ type: FollowDto })
   followUser(
     @Body('followerEmail') followerEmail: string,
@@ -42,6 +45,7 @@ export class UserController {
   }
 
   @Post('unfollow')
+  @UseGuards(BlogGuard)
   @ApiBody({ type: FollowDto })
   unfollowUser(
     @Body('followerEmail') followerEmail: string,
@@ -51,6 +55,7 @@ export class UserController {
   }
 
   @Post('change-password')
+  @UseGuards(BlogGuard)
   @ApiBody({ type: ChangePasswordDto })
   changePassword(
     @Body('oldPassword') oldPassword: string,
@@ -67,16 +72,19 @@ export class UserController {
     @Param('id') id: string,
     @Query('requestUserEmail') requestUserEmail: string,
   ) {
+    if (!requestUserEmail) return this.userService.getPublicProfile(id, '');
     return this.userService.getPublicProfile(id, requestUserEmail);
   }
 
   @Post('like')
+  @UseGuards(BlogGuard)
   @ApiBody({ type: likeBlogPostDto })
   likeBlogPost(@Body('blogId') blogId: string, @Body('userId') userId: string) {
     return this.userService.likeBlogPost(blogId, userId);
   }
 
   @Post('unlike')
+  @UseGuards(BlogGuard)
   @ApiBody({ type: likeBlogPostDto })
   unlikeBlogPost(
     @Body('blogId') blogId: string,
@@ -86,6 +94,7 @@ export class UserController {
   }
 
   @Post('profileImage')
+  @UseGuards(BlogGuard)
   @UseInterceptors(FileInterceptor('image'))
   uploadImage(
     @Body('email') email: string,
